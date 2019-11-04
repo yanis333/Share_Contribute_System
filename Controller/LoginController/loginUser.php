@@ -16,7 +16,7 @@
 
     if($row!=null){
     $arr[0] = true;
-    $arr[1] = $row['username'];
+    $arr[1] = $row['lastname'];
     $_SESSION['usernameId'] = $row['Id'];
     $_SESSION['username'] = $row['username'];
     $_SESSION['isAdmin'] = $row['isAdmin'];
