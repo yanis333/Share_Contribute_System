@@ -70,13 +70,17 @@
 
                    $("#login").click(function(){
 
-                    $.post('../Controller/LoginController/loginUser.php',{username:"usernameYanis",password:"passwordYanis"},function(data){
+                    $.post('../Controller/LoginController/loginUser.php',{username:$("#loginUsername").val(),password:$("#loginPassword").val()},function(data){
                         var info = JSON.parse(data);
-                        if(info[0]){
-                            alert("Yanis");
-                        }
-                        else{
-                            alert("Eror");
+                        if(info != "false"){
+                            if(info[0]){
+                                alert(info[1]);
+                            }
+                            else{
+                                alert("Eror");
+                            }
+                        }else{
+                            alert("You need to enter good credentials!");
                         }
                     });
 
