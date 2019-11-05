@@ -74,13 +74,13 @@
                         var info = JSON.parse(data);
                         if(info != "false"){
                             if(info[0]){
-                                alert(info[1]);
+                                window.location.href = "Dashboard/dashboard.php"
                             }
                             else{
                                 alert("Eror");
                             }
                         }else{
-                            alert("You need to enter good credentials!");
+                            alert("You need to enter good credentials!")
                         }
                     });
 

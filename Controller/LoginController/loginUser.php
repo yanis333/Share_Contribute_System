@@ -4,11 +4,12 @@
     $db = new DB();
     $username = $_POST['username'];
     $password = $_POST['password'];
-    
+
     if($username == "" || $password == ""){
         echo json_encode(false);
+        return;
     }
-        
+    
     $result = $db->query("Select * from users where username='".$username."' AND password= '".$password."'");
     $row = $result->fetch_assoc();
     $arr = array();
@@ -16,7 +17,8 @@
 
     if($row!=null){
     $arr[0] = true;
-    $arr[1] = $row['lastname'];
+    $arr[1] = $row['username'];
+    $arr[2] = $row['isAdmin'];
     $_SESSION['usernameId'] = $row['Id'];
     $_SESSION['username'] = $row['username'];
     $_SESSION['isAdmin'] = $row['isAdmin'];
