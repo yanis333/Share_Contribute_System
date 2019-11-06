@@ -14,7 +14,7 @@
                     transition: background-color .5s;
                     background-image: url("../../Wallpaper/background_wallpaper.jpg");
                 }
-                .sidenav {
+                #mySidenav {
                 height: 100%;
                 width: 0;
                 position: fixed;
@@ -26,8 +26,8 @@
                 transition: 0.5s;
                 padding-top: 60px;
                 }
-
-                .sidenav a {
+                    
+                #mySidenav a,#userLogout{
                 padding: 8px 8px 8px 32px;
                 text-decoration: none;
                 font-size: 25px;
@@ -36,11 +36,11 @@
                 transition: 0.3s;
                 }
 
-                .sidenav a:hover {
+                #mySidenav a:hover,#userLogout:hover{
                 color: #f1f1f1;
                 }
 
-                .sidenav .closebtn {
+                #mySidenav .closebtn {
                 position: absolute;
                 top: 0;
                 right: 25px;
@@ -60,17 +60,32 @@
             </style>
         </head>
         <body>
-        <div id="mySidenav" class="sidenav">
+        <div id="mySidenav">
         <a href="" class="closebtn" id="closeNav">&times;</a>
         <a href="../Dashboard/dashboard.php">Home</a>
         <a href="../Profil/profil.php">Profil</a>
         <a href="../User/user.php">Users</a>
         <a href="../Group/group.php">Groups</a>
         <a href="../Event/event.php">Events</a>
+        <p id="userLogout" >Logout</p>
         </div>
 
             <script>
                 $(document).ready(function() {
+
+                    $.post('../../Controller/LoginController/isUserConnected.php',{},function(data){
+                        var info = JSON.parse(data);
+                        if(info[0] == false){
+                            window.location.href="../home.php";
+                        }
+                    });
+
+                    $("#userLogout").click(function(){
+                        $.post('../../Controller/LoginController/userLogout.php',{},function(data){
+                            window.location.href="../home.php";
+                        });
+                    });
+
                     $("#closeNav").click(function() {
                     $("#mySidenav").css("width","0");
                     $("#main").css("marginLeft","0");

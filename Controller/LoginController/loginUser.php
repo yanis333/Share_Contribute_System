@@ -1,6 +1,6 @@
 <?php
     include('../../Model/Config/db_server.php');
-    //session_start();
+    session_start();
     $db = new DB();
     $username = $_POST['username'];
     $password = $_POST['password'];
