@@ -6,15 +6,14 @@
     $arrayInfo[0] = false;
     if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null){
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
+        $name = $_POST['name'];
 
-        if($firstname == "" || $lastname == ""){
+        if($name == ""){
             echo json_encode(false);
             return;
         }
         
-        $result = $db->query("Update users set firstname = '".$firstname."' , lastname = '".$lastname."' where username = '".$_SESSION["username"]."'");
+        $result = $db->query("Update users set name = '".$name."' where username = '".$_SESSION["username"]."'");
       
         if($result){
             $arrayInfo[0] =true;

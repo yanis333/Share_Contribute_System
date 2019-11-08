@@ -19,7 +19,7 @@
     $arr[0] = true;
     $arr[1] = $row['username'];
     $arr[2] = $row['isAdmin'];
-    $_SESSION['usernameId'] = $row['Id'];
+    $_SESSION['usernameId'] = $row['id'];
     $_SESSION['username'] = $row['username'];
     $_SESSION['isAdmin'] = $row['isAdmin'];
     }
