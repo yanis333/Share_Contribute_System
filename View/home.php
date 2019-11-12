@@ -53,8 +53,9 @@
         </head>
         <body>
             <div id = "main">
-                <div id= "loginForm">
-                `  <form action="">
+                <div id= "loginForm"> 
+                <h3><strong>Share Contribute System</strong></h3>
+                    <form action="">
                         <label >Username</label>
                         <input type="text" id="loginUsername" placeholder="Username...">
 
@@ -64,7 +65,7 @@
                         <input type="button" id="login" value="Login">
                         <span >Forgot <a href="#">password?</a></span>
                     </form>
-                </div>`
+                </div>
             </div>
 
 
@@ -80,7 +81,7 @@
                                 window.location.href = "Dashboard/dashboard.php"
                             }
                             else{
-                                alert("Eror");
+                                alert("Error, wrong credentials.");
                             }
                         }else{
                             alert("You need to enter good credentials!")

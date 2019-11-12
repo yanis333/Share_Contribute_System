@@ -7,7 +7,7 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
             <title>Soul Society</title>
             <style>
-            #searchEventInput {
+                #searchEventInput {
                 width: 50%;
                 padding: 12px 20px;
                 margin: 8px 0;
@@ -18,6 +18,7 @@
                 border-radius: 12px;
                 box-sizing: border-box;
                 }
+
                 #searchEventButton {
                 width: 5%;
                 background-color: #1F11F7;
@@ -32,6 +33,7 @@
                 #searchEventButton:hover {
                 background-color: #1006A6;
                 }
+
                 #createEventButton {
                 width: 5%;
                 background-color: #4CAF50;
@@ -46,6 +48,7 @@
                 #createEventButton:hover {
                 background-color: #45a049;
                 }
+
                 input[type=text], select {
                 width: 100%;
                 padding: 12px 20px;
@@ -55,6 +58,7 @@
                 border-radius: 4px;
                 box-sizing: border-box;
                 }
+
                 .eventGroup {
                 margin-top :2%;
                 margin-left : 25%;
@@ -63,29 +67,29 @@
                 padding: 20px;
                 width: 30%;
                 box-shadow: 5px 10px #888888;
-                
                 }
-                .userGroup{
+
+                .userGroup {
                 margin-top :2%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
                 width: 90%;
-                
                 }
-                .allParticipantGroup{
+
+                .allParticipantGroup {
                     margin-top :2%;
                     border-radius: 5px;
                     background-color: #f2f2f2;
-                    padding: 20px;
                     width: 90%;
-                    
                 }
+
                 .eventButton, .userButton{
                     float:right;
                 }
+
                 .eventHeader {
-                margin-top :3%;
+                margin-top :2%;
                 margin-left : 1%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
@@ -106,39 +110,59 @@
                 float:left;
                 
                 }
-                #eventPostBody{
+                #eventPostBody {
                 margin-top :5%;
                 margin-left : 25%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
-                width: 35%;}
+                width: 35%;
+                }
+
+                .flexBox {
+                display : flex;
+                flex-direction : column;
+                }
 
                 .eventRightSideInfo {
+                margin-top :5%;
+                margin-left : 3%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 40%;
+                float:left; 
+                justify-content : flex-start;               
+                }
+
+                .groupRightSideInfo {
                 margin-top :2%;
                 margin-left : 3%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
-                width: 20%;
-                float:left;
-                
+                width: 40%;
+                float:left; 
+                justify-content : flex-end;   
                 }
-                #mainSpecificEvent{
+
+                #mainSpecificEvent {
                     position:relative;
                     padding:0;
                     margin:0;
-
+                    overflow-x:hidden;
+                    overflow-y : hidden;
                     height:110%;
                     width :110%;
                     transition: background-color .5s;
                 }
-                #event{
-                    overflow-y:scroll;
+
+                #event {
+                    overflow-y:auto;
                 }
             </style>
         </head>
-        <body>
+        <body style="overflow-x:hidden">
         <?php include("../Dashboard/navbar.php") ?>
         
         <div id="main" >
@@ -167,11 +191,17 @@
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="eventPostText" >Post</button><button >Image</button><button >Video</button>
                 </div>
+                <div class="flexBox">
                 <div class="eventRightSideInfo">
                     <h3>All Participants</h3>
                     <div id="eventAllParticipants"></div>
                     <br>
-
+                </div><br>
+                <div class="groupRightSideInfo" style="float:right">
+                    <h3>All Groups</h3>
+                    <div id="eventAllGroups"></div>
+                    <br>
+                </div>
                 </div><br><br>
                 <!--
                 <div id="eventPostBody">
@@ -252,6 +282,7 @@
                                     $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
                                     $("#storeEventId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['eventParticipant']);
+                                    createRightAllGroupsBox(info[1]['eventGroup']);
                                 }else{
                                 }
                             });
@@ -286,6 +317,19 @@
                                                 participantHtmlBox +=  "</div>"
                                                 
                             $("#eventAllParticipants").append(participantHtmlBox);
+                        }
+                    }
+                    function createRightAllGroupsBox(arrayofAllGroup){
+                        $("#eventAllGroups").empty();
+
+                        $("#nbGroupEvent").text(arrayofAllGroup.length);
+                        for(var x = 0; x<arrayofAllGroup.length;x++ ){
+                            var groupHtmlBox = "<div class = 'allGroup' > "+
+                                                "<span> "+(x+1)+")"+arrayofAllGroup[x]['name']+"</span>";
+                                                
+                                                groupHtmlBox +=  "</div>"
+                                                
+                            $("#eventAllGroups").append(groupHtmlBox);
                         }
                     }
                     function createUserBox(arrayofUser){

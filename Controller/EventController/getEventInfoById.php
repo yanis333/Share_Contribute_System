@@ -37,6 +37,21 @@
                 $arrayInfo[1]['eventParticipant'] = $allInfo;
             }
 
+            $result = $db->query("select 
+                                    e.ID,
+                                    g.name
+                                    from groups as g 
+                                    inner join events as e on e.ID = g.eventID
+                                    where e.ID =".$idSelected." order by g.name Asc");
+            $allInfo = array();
+
+            if($result){
+                 while($row = $result->fetch_assoc()){
+                     $allInfo[] = $row;
+                     }
+                 $arrayInfo[1]['eventGroup'] = $allInfo;
+             }
+
         }
 
     }
