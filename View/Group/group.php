@@ -44,7 +44,23 @@
 
             <script>
                 $(document).ready(function() {
-                   
+                    /*$(document).on("click","button",function(){
+                       if(this.id.includes("eventOpen")){
+                           var idOfButtonClicked = this.id.substring(9);
+                           $.post('../../Controller/EventController/getEventInfoById.php',{id:idOfButtonClicked},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#mainSpecificEvent").show();
+                                    $("#mainGenericEvent").hide();
+                                    $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
+                                    $("#storeEventId").val(idOfButtonClicked);
+                                    createRightAllParticipantsBox(info[1]['eventParticipant']);
+                                    createRightAllGroupsBox(info[1]['eventGroup']);
+                                }else{
+                                }
+                            });
+                       }
+                    });*/
 
                 });
             </script>
