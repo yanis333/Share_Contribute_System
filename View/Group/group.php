@@ -32,36 +32,97 @@
                 #searchGroupButton:hover {
                 background-color: #1006A6;
                 }
+               
+
+                input[type=text], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                }
+
+                .listOfGroups {
+                margin-top :2%;
+                margin-left : 25%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 30%;
+                box-shadow: 5px 10px #888888;
+                }
+
+             
+
+                .groupButton{
+                    float:right;
+                }
+
+               
+                .groupBody {
+                margin-top :2%;
+                margin-left : 3%;
+                margin-bottom:2%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 35%;
+                float:left;
+                
+                }
+          
             </style>
         </head>
         <body>
         <?php include("../Dashboard/navbar.php") ?>
+
         <div id="main">
-        <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span><br>
-        <input type="text" id="searchGroupInput" placeholder="Search Group...">
-        <button id="searchGroupButton">Search</button>
-        </div>
+            <div id="mainGenericGroup">
+            <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span><br>
+            <input type="text" id="searchGroupInput" placeholder="Search Group...">
+            <button id="searchGroupButton">Search</button>
+            <div id="group" ></div>
+             </div>
+   
 
             <script>
                 $(document).ready(function() {
-                    /*$(document).on("click","button",function(){
-                       if(this.id.includes("eventOpen")){
-                           var idOfButtonClicked = this.id.substring(9);
-                           $.post('../../Controller/EventController/getEventInfoById.php',{id:idOfButtonClicked},function(data){
-                                var info = JSON.parse(data);
-                                if(info[0]){
-                                    $("#mainSpecificEvent").show();
-                                    $("#mainGenericEvent").hide();
-                                    $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
-                                    $("#storeEventId").val(idOfButtonClicked);
-                                    createRightAllParticipantsBox(info[1]['eventParticipant']);
-                                    createRightAllGroupsBox(info[1]['eventGroup']);
-                                }else{
-                                }
-                            });
-                       }
-                    });*/
+                   
 
+                    
+
+
+                
+                    function createGroupBox(triggerAction,arrayofEvent){
+                        $("#group").empty();
+                        $("#group").append("<h3 style='margin-left:25%'> "+triggerAction+" </h3>");
+                        for(var x = 0; x<arrayofEvent.length;x++ ){
+                            var eventHtmlBox = "<div class = 'listOfGroups' > "+
+                                                "<span> Group Name : "+arrayofEvent[x]['name']+"</span>";
+                                                if(arrayofEvent[x]['isRegistered'] == 0){
+                                                    eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton'  >Register</button><br>";
+                                                }else{
+                                                    eventHtmlBox +=  "<button id= \"groupOpen"+arrayofEvent[x]['ID']+"\" class='groupButton'>Open</button><br>";
+                                                }
+                                                
+                                                eventHtmlBox +=  "</div>"
+                                                
+                            $("#group").append(eventHtmlBox);
+                        }
+                    }
+                   
+
+
+                    $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                createGroupBox("All Group you can register or registered in !",info[1]);
+                            }else{
+                                
+                            }
+                        });
                 });
             </script>
         </body>

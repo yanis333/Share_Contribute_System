@@ -8,7 +8,6 @@
     
      if($_SESSION["username"]!=null) {
 
-        $idSelected = $_POST['id'];
             $result = $db->query("select * 
                                     from groups as g 
                                     left join groupparticipants as gp on gp.groupID = g.id 
@@ -16,7 +15,7 @@
                                         (select e.Id 
                                         from eventparticipants as ep 
                                         inner join events as e on e.Id = ep.eventID 
-                                        where ep.userid=".$idSelected.") 
+                                        where ep.userid=".$_SESSION["usernameId"].") 
                                         OR g.ID in 
                                             (select gp2.groupID 
                                             from groupparticipants as gp2 
@@ -28,25 +27,9 @@
                     $allInfo[] = $row;
                 }
                 $arrayInfo[0] = true;
-                $arrayInfo[1]['groupHeaders'] = $allInfo;
+                $arrayInfo[1] = $allInfo;
             }
 
-            $result = $db->query("select 
-                                    g.name,
-                                    g.managerID,
-                                    g.creationDate,
-                                    g.eventID
-                                    from groups as g 
-                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$idSelected.")");
-            $allInfo = array();
-
-            if($result){
-                while($row = $result->fetch_assoc()){
-                    $allInfo[] = $row;
-                }
-                $arrayInfo[0] = true;
-                $arrayInfo[1]['mygroups'] = $allInfo;
-            }
         }
 
      }
