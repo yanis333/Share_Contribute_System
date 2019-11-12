@@ -1,18 +1,32 @@
 <!DOCTYPE html>
     <html>
         <head>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
             <title>Soul Society</title>
             <style>
+            html {
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+            }
+
+            body {
+            margin: 0px;
+            min-height: 100%;
+            width: 100%;
+            background-image: url("../../Wallpaper/background_wallpaper.jpg");
+            }
                 #main  {
-                    position:fixed;
+                    position:relative;
                     padding:0;
                     margin:0;
 
                     height:110%;
                     width :110%;
                     transition: background-color .5s;
-                    background-image: url("../../Wallpaper/background_wallpaper.jpg");
                 }
                 #mySidenav {
                 height: 100%;
