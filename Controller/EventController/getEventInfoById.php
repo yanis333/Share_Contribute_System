@@ -4,8 +4,10 @@
     $db = new DB();
     $arrayInfo = array();
     $arrayInfo[0] = false;
+ 
     if(isset($_SESSION['username']))
     {if($_SESSION["username"]!=null){
+
         $idSelected = $_POST['id'];
             $result = $db->query("select 
                                     e.ID,
@@ -34,6 +36,7 @@
                 while($row = $result->fetch_assoc()){
                     $allInfo[] = $row;
                 }
+                $arrayInfo[0] = true;
                 $arrayInfo[1]['eventParticipant'] = $allInfo;
             }
 
@@ -50,7 +53,23 @@
                      $allInfo[] = $row;
                      }
                  $arrayInfo[1]['eventGroup'] = $allInfo;
-             }
+            }
+
+            $result = $db->query("select * 
+                                from users 
+                                where id in 
+                                    (select userID 
+                                    from eventparticipants
+                                    where eventID=".$idSelected.");");
+            $allInfo = array();
+
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['allUsersOfEvent'] = $allInfo;
+            }
 
         }
 
