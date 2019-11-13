@@ -188,7 +188,7 @@
                     <input id="storeEventId" hidden />
                     <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
                     <button>Edit</button><br><br>
-                    <button data-toggle="modal" data-target="#addNewGroup">Add Group</button>
+                    <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>
                     <span>Nb of groups : </span><span id="nbGroupEvent"></span><br>
@@ -258,15 +258,20 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
+                   
+
                     <div class="modal-body">
-                        <input type="text" id="groupName" placeholder="Name">
-                        <button id="addGroupButton">Create Group</button>
+                   
+                    <span> Group Name :</span> <input type="text" id="groupName" placeholder="Name">
+                        <div id="userEventList"> </div>
+                        <br>
+                        <button id="addGroupButton" data-dismiss="modal">Create Group</button>
                         </div>
                     </div>
+                    
+                  
 
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+                    
                 </div>
                 
                 </div>
@@ -436,6 +441,21 @@
                             $("#postContentDiv").append(postHtmlBox);
                         }
                     }
+                    function displayUserList(arrayofUser){
+                        $("#userEventList").empty();
+                   
+                        for(var x = 0; x<arrayofUser['allUsersOfEvent'].length;x++ ){
+                            var userHtmlBox = "<div class = 'userGroup'> "+
+                                                "<span> "+arrayofUser['allUsersOfEvent'][x]['name']+"</span>";
+                                                
+                                                    userHtmlBox +=  "<input type='checkbox' name='addUserIdToGroup' id= \"addUserIdToGroup "+arrayofUser['allUsersOfEvent'][x]['id']+"\"class='userButton' value="+arrayofUser['allUsersOfEvent'][x]['id']+" ?> </input><br>";
+                                                
+                                                userHtmlBox += "</div>"
+                                                
+                            $("#userEventList").append(userHtmlBox);
+                        }
+                   
+                    }
 
                     $("#eventPostText").click(function(){
                         if($("#postText").val() != ""){
@@ -447,6 +467,19 @@
                                 }
                             });
                         }
+                    });
+
+                    $("#addNewGroupToEvent").click(function(){
+                       $.post('../../Controller/EventController/getEventInfoById.php',{id:$("#storeEventId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    displayUserList(info[1]);
+                                }else{
+                                    alert("LOL");
+                                }
+                            });
+
+                        
                     });
 
                     $("#backToSearchEvent").click(function(){
@@ -469,12 +502,17 @@
                     });
 
                     $("#addGroupButton").click(function(){
+                        var checked = []
+                         $("input[name='addUserIdToGroup']:checked").each(function ()
+                                    {checked.push(parseInt($(this).val())); });
 
                         if($("#groupName").val() != ""){
-                            $.post('../../Controller/GroupController/addGroup.php',{name:$("#groupName").val(),id:$("#storeEventId").val()},function(data){
+                            $.post('../../Controller/GroupController/addGroup.php',{name:$("#groupName").val(),id:$("#storeEventId").val(),userId:JSON.stringify(checked)},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                   alert("The group is created successfully !")
+                                   alert("The group is created successfully !");
+                                   $('#groupName').val('');
+                                   createRightAllGroupsBox(info[2]);
                                 }
                             });
                         }else{
@@ -508,6 +546,7 @@
                                 
                             }
                         });
+
                     $("#saveEvent").click(function(){
                         if($("#nameEvent").val() == ""||$("#addressEvent").val() == ""||$("#phoneNumberEvent").val() == ""||$("#typeOfOrgEvent").val() == ""){
                             alert("All fields must be field");
