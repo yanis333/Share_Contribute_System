@@ -24,7 +24,7 @@
                 $postInserted[] = $row;
                 break;
             }
-        $db->query("insert into posttexttoevent(eventID,content,postID)values(".$eventID.",'".$content."', ".$postInserted[0]['ID']);  
+        $db->query("insert into posttexttoevent(eventID,content,postID)values(".$eventID.",'".$content."', ".$postInserted[0]['ID'].")");  
         
         $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postevent as p  inner join posttexttoevent as pt on pt.postID = p.ID
                                 inner join users as u on u.id = p.userID where pt.eventID = ".$eventID." order by p.date desc");

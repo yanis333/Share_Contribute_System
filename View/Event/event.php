@@ -145,6 +145,14 @@
                 float:left; 
                 justify-content : flex-end;   
                 }
+                .eventBoxPost {
+                margin-top :2%;
+                margin-left : 3%;
+                border-radius: 5px;
+                padding: 10px;
+                width: 40%;
+                float:left;  
+                }
 
                 #mainSpecificEvent {
                     position:relative;
@@ -191,7 +199,12 @@
                 <div class="eventBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="eventPostText" >Post</button><button >Image</button><button >Video</button>
+                    
+                    
                 </div>
+                <div id="postContentDiv" class="eventBoxPost">
+
+                    </div>
                 <div class="flexBox">
                 <div class="eventRightSideInfo">
                     <h3>All Participants</h3>
@@ -204,13 +217,6 @@
                     <br>
                 </div>
                 </div><br><br>
-                <!--
-                <div id="eventPostBody">
-                    <h3>All Participants</h3>
-                        <div id="eventAllParticipants"></div>
-                        <br>
-                </div>
-                -->
             </div>
             
         </div>
@@ -314,10 +320,37 @@
                                     $("#storeEventId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['eventParticipant']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
+                                    createPostBox(info[1]['eventPostContent']);
+                                }else{
+                                }
+                            });
+                       }else if(this.id.includes("commentPostIdButton")){
+                        var idOfButtonClicked = this.id.substring(19);
+                        if($("commentPostId"+idOfButtonClicked).val() != ""){
+                            var saliha ="#commentPostId"+idOfButtonClicked;
+                            var yanis = $("#commentPostId"+idOfButtonClicked).val();
+
+                            $.post('../../Controller/EventController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),eventId:$("#storeEventId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createPostBox(info[1]['eventPostContent']);
+                                }else{
+                                }
+                            });
+                        }
+                       }else if(this.id.includes("addUserId")){
+                        var idOfButtonClicked = this.id.substring(9);
+                            $.post('../../Controller/EventController/addUserToEvent.php',{id:idOfButtonClicked,eventId:$("#storeEventId").val(),name:$("#searchUserToInvite").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createUserBox(info[1]);
+                                    createRightAllParticipantsBox(info[2]);
                                 }else{
                                 }
                             });
                        }
+                    
+                
                     });
 
                     function createEventBox(triggerAction,arrayofEvent){
@@ -369,28 +402,43 @@
                             var userHtmlBox = "<div class = 'userGroup'> "+
                                                 "<span> User Name : "+arrayofUser[x]['name']+"</span>";
                                                 if(arrayofUser[x]['isRegistered'] == 0){
-                                                    userHtmlBox +=  "<button id= \"addUserId"+x+"\" class='userButton'>Add</button><br>";
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Add</button><br>";
                                                 }else{
-                                                    userHtmlBox +=  "<button id= \"addUserId"+x+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser[x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
                                                 }
                                                 userHtmlBox += "</div>"
                                                 
                             $("#UserSearched").append(userHtmlBox);
                         }
                     }
-                    function createPostBox(arrayofPost){
-                        $("#UserSearched").empty();
-                        for(var x = 0; x<arrayofUser.length;x++ ){
-                            var userHtmlBox = "<div class = 'userGroup'> "+
-                                                "<span> User Name : "+arrayofUser[x]['name']+"</span>";
-                                                if(arrayofUser[x]['isRegistered'] == 0){
-                                                    userHtmlBox +=  "<button id= \"addUserId"+x+"\" class='userButton'>Add</button><br>";
-                                                }else{
-                                                    userHtmlBox +=  "<button id= \"addUserId"+x+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
-                                                }
-                                                userHtmlBox += "</div>"
+                    function createCommentBox(arrayofComment){
+                        //$("#nbPostEvent").text(arrayofComment.length);
+                        var commentHtmlBox = "<br><br>";
+                        for(var x = 0; x<arrayofComment.length;x++ ){
+                             commentHtmlBox += "<div style = 'border-top: 1px black solid;margin-left:2%'>" +
+                                                "<span style=\"margin-right:5%\">"+arrayofComment[x]['name']+"</span> "+
+                                                "<span> "+arrayofComment[x]['date']+"</span>"+
+                                                "<h6>"+arrayofComment[x]['comment']+"</h6>"+
+                                                "</div><br>"
                                                 
-                            $("#UserSearched").append(userHtmlBox);
+                            
+                        }
+                        return commentHtmlBox;
+                    }
+                    function createPostBox(arrayofPost){
+                        $("#postContentDiv").empty();
+                        $("#nbPostEvent").text(arrayofPost.length);
+                        for(var x = 0; x<arrayofPost.length;x++ ){
+                            var postHtmlBox = "<div class = 'userGroup'>" +
+                                                "<h5>"+arrayofPost[x]['name']+"</h4> "+
+                                                "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
+                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
+                                                "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
+                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
+                                                createCommentBox(arrayofPost[x]['children'])+
+                                                "</div>"
+                                                
+                            $("#postContentDiv").append(postHtmlBox);
                         }
                     }
                     function displayUserList(arrayofUser){
