@@ -52,6 +52,22 @@
                  $arrayInfo[1]['eventGroup'] = $allInfo;
              }
 
+             $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postevent as p  inner join posttexttoevent as pt on pt.postID = p.ID
+                                    inner join users as u on u.id = p.userID where pt.eventID = ".$idSelected." order by p.date desc");
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allCommentInfo = array();
+                    $result2 = $db->query("Select u.name,c.comment,c.date from commentpostevent as c inner join users as u on u.ID = c.userID where c.postID = ".$row['ID']."");
+                    while($row2 = $result2->fetch_assoc()){
+                        $allCommentInfo[] = $row2;
+                    }
+                    $row['children'] = $allCommentInfo;
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[1]['eventPostContent'] = $allInfo;
+            }
+
         }
 
     }
