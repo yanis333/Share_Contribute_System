@@ -180,7 +180,8 @@
                     <input id="storeEventId" hidden />
                     <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
                     <button>Edit</button><br><br>
-
+                    <button data-toggle="modal" data-target="#addNewGroup">Add Group</button>
+                    <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>
                     <span>Nb of groups : </span><span id="nbGroupEvent"></span><br>
                     <span>Number of post : </span><span id="nbPostEvent"></span><br>
@@ -232,6 +233,31 @@
 
                         </div>
                     </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+                </div>
+        </div>
+
+        <div class="modal fade" id="addNewGroup">
+                <div class="modal-dialog">
+                
+                <!-- Modal content-->
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                    <h4 class="modal-title">Name of the group</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="text" id="groupName" placeholder="Name">
+                        <button id="addGroupButton">Create Group</button>
+                        </div>
+                    </div>
+
                     <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
@@ -392,6 +418,22 @@
                         }else{
                             alert("You need to enter a user name to search for!");
                         }
+                    });
+
+                    $("#addGroupButton").click(function(){
+
+                        if($("#groupName").val() != ""){
+                            $.post('../../Controller/GroupController/addGroup.php',{name:$("#groupName").val(),id:$("#storeEventId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                   alert("The group is created successfully !")
+                                }
+                            });
+                        }else{
+                            alert("You need a name for the group!");
+                        }
+
+
                     });
 
                     $("#searchEventButton").click(function(){
