@@ -157,20 +157,18 @@
                         if($("#uName").val() == ""||$("#userDOB").val() == ""||$("#userEmail").val() == ""||$("#userName").val() == "" || $("#userPassword").val() == ""){
                             alert("All fields must be field");
                         }else{
-                            if ($('#isAdmin').is(":checked"))
+                            if ($("#isAdmin").is(":checked"))
                             {
                                 isAdminVal = 1;
                             } else {
                                 isAdminVal = 0;
                             }
-                            alert("the value is ", isAdminVal);
-                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("#userEmail").val(),userName:$("#userName").val(),password:$("#userPassword").val(),isAdminVal},function(data){
+                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("#userEmail").val(),userName:$("#userName").val(),password:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createUserBox("User has been added successfully",info[1]);
-                                    alert("Event Created Successfully");
+                                    alert("User "+ info[1] +"Created Successfully ");
                                 }else{
-                                    alert("You need to be an admin to create an event!");
+                                    alert("You need to be an admin to create a user");
                                 }
                             });
                         }

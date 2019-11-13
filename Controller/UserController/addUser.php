@@ -24,15 +24,9 @@ if(isset($_SESSION['username']))
         } else {
             $db->query("insert into users(name,password,birth,email,isAdmin,userName) values('".$name."','".$userPassword."','".$userDOB."','".$userEmail."',0,'".$userName."')");
         }
-        $result = $db->query("select ID, name from events order by ID desc");
-        if($result){
-
-            while($row = $result->fetch_assoc()){
-                $allInfo[] = $row;
-            }
             $arrayInfo[0] = true;
-            $arrayInfo[1] = $allInfo;
-        }
+            $arrayInfo[1] = $name;
     }
+
 echo json_encode($arrayInfo);
 ?>
