@@ -100,7 +100,8 @@
                         $("#group").append("<h3 style='margin-left:25%'> "+triggerAction+" </h3>");
                         for(var x = 0; x<arrayofEvent.length;x++ ){
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
-                                                "<span> Group Name : "+arrayofEvent[x]['name']+"</span>";
+                                                "<span> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
+                                                "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton'  >Register</button><br>";
                                                 }else{
