@@ -1,11 +1,11 @@
 <?php
-    include('../../Model/Config/db_server.php');
-    session_start();
-    $db = new DB();
-    $arrayInfo = array();
-    $allInfo= array();
-    $arrayInfo[0] = false;
-    if(isset($_SESSION['username']))
+include('../../Model/Config/db_server.php');
+session_start();
+$db = new DB();
+$arrayInfo = array();
+$allInfo= array();
+$arrayInfo[0] = false;
+if(isset($_SESSION['username']))
     if($_SESSION["username"] != null && $_SESSION['isAdmin'] == 1){
         $name = $_POST['name'];
         $address = $_POST['address'];
@@ -19,7 +19,7 @@
         $db->query("insert into events(name,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$address."','".$phone."',1,'".$type."')");
         $result = $db->query("select ID, name from events order by ID desc");
         if($result){
-            
+
             while($row = $result->fetch_assoc()){
                 $allInfo[] = $row;
             }
@@ -27,5 +27,5 @@
             $arrayInfo[1] = $allInfo;
         }
     }
-    echo json_encode($arrayInfo);
+echo json_encode($arrayInfo);
 ?>
