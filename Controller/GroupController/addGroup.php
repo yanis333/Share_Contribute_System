@@ -19,6 +19,6 @@
         $db->query("insert into groups(name,managerID,creationDate,eventID) values('".$name."','".$_SESSION["usernameId"]."','". date('Y-m-d H:i:s')."','".$id."')");
         $result = $db->query("select ID from groups where name=".$name."");
         $arrayInfo[0] = true;
-        
+    }
     echo json_encode($arrayInfo);
 ?>
