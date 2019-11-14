@@ -7,22 +7,23 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
             <title>Soul Society</title>
             <style>
-            body{
-            overflow-x: hidden; 
+            body {
+                overflow-x: hidden; 
             }
+
             #searchGroupInput {
                 width: 50%;
                 padding: 12px 20px;
-                margin: 8px 0;
+                margin: 2% 0;
                 margin-left:15%;
-                margin-top:5%;
+                margin-top:2%;
                 display: inline-block;
                 border: 1px solid #ccc;
                 border-radius: 12px;
                 box-sizing: border-box;
-                }
-                #searchGroupButton {
-                width: 5%;
+            }
+            
+            #searchGroupButton {
                 background-color: #1F11F7;
                 color: white;
                 padding: 14px 20px;
@@ -32,10 +33,11 @@
                 margin-left:1%;
                 }
 
-                #searchGroupButton:hover {
+            #searchGroupButton:hover {
                 background-color: #1006A6;
-                }
-                #clearButton {
+            }
+            
+            #clearButton {
                 width: 5%;
                 background-color: #FF5252;
                 color: white;
@@ -44,15 +46,13 @@
                 border-radius: 12px;
                 cursor: pointer;
                 margin-left:1%;
-                }
+            }
 
-                #clearButton:hover {
+            #clearButton:hover {
                 background-color:  #FF2929;
-                }
+            }   
                
-               
-
-                input[type=text], select {
+            input[type=text], select {
                 width: 100%;
                 padding: 12px 20px;
                 margin: 8px 0;
@@ -60,26 +60,30 @@
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 box-sizing: border-box;
-                }
+            }
 
-                .listOfGroups {
+            .listOfGroups {
                 margin-top :2%;
                 margin-left : 35%;
+                margin-bottom : 4%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
-                width: 30%;
+                width: 60%;
                 box-shadow: 5px 10px #888888;
-                }
+            }
 
-             
+            .row2 {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
 
-                .groupButton{
-                    float:right;
-                }
-
+            .groupButton{
+                float:right;
+            }
                
-                .groupBody {
+            .groupBody {
                 margin-top :2%;
                 margin-left : 3%;
                 margin-bottom:2%;
@@ -88,9 +92,9 @@
                 padding: 20px;
                 width: 35%;
                 float:left;
-                
-                }
-                .groupRightSideInfo {
+            }
+            
+            .groupRightSideInfo {
                 margin-top :5%;
                 margin-left : 3%;
                 border-radius: 5px;
@@ -99,8 +103,9 @@
                 width: 40%;
                 float:left; 
                 justify-content : flex-start;      
-                }
-                .myGroupClass {
+            }
+            
+            .myGroupClass {
                 margin-top :5%;
                 margin-left : 3%;
                 border-radius: 5px;
@@ -109,8 +114,9 @@
                 width: 150%;
                 float:left; 
                 justify-content : flex-start;      
-                }
-                .groupHeader {
+            }
+            
+            .groupHeader {
                 margin-top :2%;
                 margin-left : 1%;
                 border-radius: 5px;
@@ -119,23 +125,26 @@
                 width: 20%;
                 height:50%;
                 float:left;
-                }
-                .groupBoxPost {
+            }
+            
+            .groupBoxPost {
                 margin-top :2%;
                 margin-left : 3%;
                 border-radius: 5px;
                 padding: 10px;
                 width: 40%;
                 float:left;  
-                }
-                .flexBox {
+            }
+            
+            .flexBox {
                 display : flex;
                 flex-direction : column;
-                }
-                .column {
+            }
+            
+            .column {
                 float: left;
                 width: 50%;
-                 }
+            }
           
             </style>
         </head>
@@ -145,20 +154,23 @@
         <div id="main">
             <div id="mainGenericGroup">
             <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span><br>
+            <div class="row2">
+                <div id="group2"></div>
+            </div>
             <input type="text" id="searchGroupInput" placeholder="Search Group...">
             <button id="searchGroupButton">Search</button>
             <button id="clearButton">Clear</button>
             <div class="row">
-            <div class="column" id="group" ></div>
-            <div>
-                <div class="myGroupClass">
-                <h3>My groups</h3>
+                <div class="column" id="group" ></div>
+                <div>
+                    <div class="myGroupClass">
+                        <h3>My groups</h3>
                         <div id="myGroups"></div>
                         <br>
                     </div><br>
                 </div><br><br>
-                </div> 
-            </div>
+            </div> 
+        </div>
 
          <div id="mainSpecificGroup" >
             <button id="backToSearchGroup" style="margin-left:40%">Back</button><br>
@@ -215,7 +227,7 @@
 
                     function createGroupBox(triggerAction,arrayofEvent){
                         $("#group").empty();
-                        $("#group").append("<h3 style='margin-left:25%'> "+triggerAction+" </h3>");
+                        $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
                         for(var x = 0; x<arrayofEvent.length;x++ ){
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
@@ -285,7 +297,7 @@
                         $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
-                                createGroupBox("All Group you can register or registered in !",info[1]);
+                                createGroupBox("All groups you can join or are currently in !",info[1]);
                                 $('#searchGroupInput').val('');
                             }else{
                                 
@@ -296,7 +308,7 @@
                      $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
-                                createGroupBox("All Group you can register or registered in !",info[1]);
+                                createGroupBox("All groups you can join or are currently in !",info[1]);
                             }else{
                                 
                             }
