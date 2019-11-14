@@ -18,6 +18,14 @@
                 border-radius: 12px;
                 box-sizing: border-box;
                 }
+                #userProfileBox {
+                margin-top :10%;
+                margin-left : 25%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 30%;
+                }
                 #searchUserButton {
                 width: 5%;
                 background-color: #1F11F7;
@@ -85,16 +93,27 @@
         <body>
         <?php include("../Dashboard/navbar.php") ?>
         <div id="main">
+        <div id="mainUserPge">
         <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span><br>
         <input type="text" id="searchUserInput" placeholder="Search User...">
         <button id="searchUserButton">Search</button>
-        <button id="createUserButton" data-toggle="modal", data-target = "#createEventModal">Create</button>
-        <div id="UserSearched">
+        <button id="createUserButton" data-toggle="modal", data-target = "#createUserModal">Create</button>
+        </div>
+            <div id="UserSearched">
 
+            </div>
+
+        <div id ="UserProfile">
+            <button id="backToSearchUser" style="margin-left:40%">Back</button><br>
+            <div id ="userProfileBox" >
+                <p> Name : <span id="userName"></span></p>
+                <p> Email  : <span id="userEmail"></span></p>
+                <p> Birthday  : <span id="userBirthday"></span></p>
+            </div>
         </div>
             <!--MODAL SECTION -->
 
-            <div class="modal fade" id="createEventModal">
+            <div class="modal fade" id="createUserModal">
                 <div class="modal-dialog">
 
                     <!-- Modal content-->
@@ -123,6 +142,7 @@
             <script>
 
                 $(document).ready(function() {
+                    $("#UserProfile").hide();
 
                     addUserButton();
                     // This function checks the current user if admin then he can add a new user
@@ -140,7 +160,7 @@
                         // If the logged in user is an Admin he can see all three buttons.
                         if(isAdmin) {
                             for(var x = 0; x<arrayofUser.length;x++ ){
-                                var userHtmlBox = "<div class = 'userGroup'> "+
+                                var userHtmlBox = "<div class = 'userGroup', id='UserBox'> "+
                                     "<span> User Name : "+arrayofUser[x]['name']+"</span>"+
                                     "<button id= \"DeleteUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Delete</button>"+
                                     "<button id= \"EditUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Edit</button>"+
@@ -197,6 +217,32 @@
                             });
                         }
                     });
+
+                    $("#backToSearchUser").click(function(){
+                        $("#UserProfile").hide();
+                        $("#mainUserPge").show();
+                        $("#UserSearched").show();
+
+                    });
+
+                    $(document).on("click","button",function () {
+                        if(this.id.includes("ViewUserId")) {
+                            var idOfUser = this.id.substring(10);
+                            $("#UserProfile").show();
+                            $("#mainUserPge").hide();
+                            $("#UserSearched").hide();
+
+                            $.post('../../Controller/UserController/getUserInformation.php',{userId:idOfUser},function (data) {
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#userName").text(info[1]['name']);
+                                    $("#userEmail").text(info[1]['email']);
+                                    $("#userBirthday").text(info[1]['birth']);
+                                }
+                            })
+
+                        }
+                    })
                 });
             </script>
         </body>

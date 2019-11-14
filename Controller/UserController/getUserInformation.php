@@ -1,13 +1,14 @@
 <?php
-    include('../../Model/Config/db_server.php');
-    session_start();
-    $db = new DB();
-    $arrayUserInfo=array();
-    $arrayUserInfo[0] = false;
-    if(isset($_SESSION['username']))
+include('../../Model/Config/db_server.php');
+session_start();
+$db = new DB();
+$arrayUserInfo=array();
+$arrayUserInfo[0] = false;
+if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null){
-        
-    $result = $db->query("Select * from users where id='".$_SESSION["usernameId"]."'");
+
+        $userId = $_POST['userId'];
+        $result = $db->query("Select * from users where id='".$userId."'");
 
         if($result != null){
             $row = $result->fetch_assoc();
@@ -17,9 +18,9 @@
                 $arrayUserInfo[0] = true;
                 $arrayUserInfo[1] = $row;
             }
-        }       
+        }
     }
 
-    echo json_encode($arrayUserInfo);
+echo json_encode($arrayUserInfo);
 
 ?>

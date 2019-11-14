@@ -69,7 +69,7 @@
             <script>
                 $(document).ready(function() {
                    
-                    $.post('../../Controller/UserController/getUserInformation.php',{},function(data){
+                    $.post('../../Controller/UserController/getCurrentUserInformation.php',{},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
                                 $("#userName").text(info[1]["name"]);
