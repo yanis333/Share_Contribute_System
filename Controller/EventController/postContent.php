@@ -30,6 +30,12 @@
                                 inner join users as u on u.id = p.userID where pt.eventID = ".$eventID." order by p.date desc");
         if($result){
             while($row = $result->fetch_assoc()){
+                $allCommentInfo = array();
+                $result2 = $db->query("Select u.name,c.comment,c.date from commentpostevent as c inner join users as u on u.ID = c.userID where c.postID = ".$row['ID']."");
+                while($row2 = $result2->fetch_assoc()){
+                    $allCommentInfo[] = $row2;
+                }
+                $row['children'] = $allCommentInfo;
                 $allInfo[] = $row;
             }
             $arrayInfo[0] = true;

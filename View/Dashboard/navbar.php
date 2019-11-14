@@ -77,6 +77,7 @@
         <div id="mySidenav">
         <a href="" class="closebtn" id="closeNav">&times;</a>
         <a href="../Dashboard/dashboard.php">Home</a>
+        <a href="../Messaging/message.php" >Message</a>
         <a href="../Profil/profil.php">Profile</a>
         <a href="../User/user.php">Users</a>
         <a href="../Group/group.php">Groups</a>
