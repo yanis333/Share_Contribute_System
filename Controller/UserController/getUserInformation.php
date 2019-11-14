@@ -7,7 +7,7 @@
     if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null){
         
-    $result = $db->query("Select * from users where username='".$_SESSION["username"]."'");
+    $result = $db->query("Select * from users where id='".$_SESSION["usernameId"]."'");
 
         if($result != null){
             $row = $result->fetch_assoc();

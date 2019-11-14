@@ -142,9 +142,10 @@
                             for(var x = 0; x<arrayofUser.length;x++ ){
                                 var userHtmlBox = "<div class = 'userGroup'> "+
                                     "<span> User Name : "+arrayofUser[x]['name']+"</span>"+
-                                    "<button id= \"DeleteUserId"+x+"\" class='userButton'>Delete</button>"+
-                                    "<button id= \"EditUserId"+x+"\" class='userButton'>Edit</button>"+
-                                    "<button id= \"MessageUserId"+x+"\" class='userButton'>Message</button>"
+                                    "<button id= \"DeleteUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Delete</button>"+
+                                    "<button id= \"EditUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Edit</button>"+
+                                    "<button id= \"MessageUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Message</button>"+
+                                    "<button id= \"ViewUserId"+arrayofUser[x]['ID']+"\" class='userButton'>User Details</button>"
                                 userHtmlBox += "</div>"
 
                                 $("#UserSearched").append(userHtmlBox);
@@ -196,7 +197,6 @@
                             });
                         }
                     });
-
                 });
             </script>
         </body>
