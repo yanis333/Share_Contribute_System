@@ -15,6 +15,12 @@
             }
             $arrayInfo[0] = true;
             $arrayInfo[1] = $allInfo;
+            // Checking if the user is an admin or not.
+            if($_SESSION['isAdmin'] == 1){
+                $arrayInfo[2] = true;
+            } else {
+                $arrayInfo[2] = false;
+            }
         }
     }
     echo json_encode($arrayInfo);

@@ -1,14 +1,14 @@
 <?php
-     include('../../Model/Config/db_server.php');
-     session_start();
-     $db = new DB();
-     $arrayInfo = array();
-     $arrayInfo[0] = false;
-     if(isset($_SESSION['username'])){
+    include('../../Model/Config/db_server.php');
+    session_start();
+    $db = new DB();
+    $arrayInfo = array();
+    $arrayInfo[0] = false;
 
-        if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
+    if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
 
-            $result = $db->query("select g.ID,g.name,e.name as eventName from groups as g left join events as e on e.ID=g.eventID");
+            $name = $_POST['name'];
+            $result = $db->query("select g.ID,g.name,e.name as eventName from groups as g left join events as e on e.ID=g.eventID where g.name like '%".$name."%' order by g.name Asc");
                 
             $allInfo = array();
     
@@ -20,8 +20,10 @@
                 $arrayInfo[1] = $allInfo;
             }
 
-            }else if($_SESSION["username"]!=null) {
+            } else if($_SESSION["username"]!=null) {
 
+            $name = $_POST['name'];
+            
             $result = $db->query("select 
                                     g.name,
                                     g.ID,
@@ -29,7 +31,7 @@
                                     Case When true then 1 end as isRegistered
                                     from groups as g 
                                     left join events as e on e.ID=g.eventID
-                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$_SESSION['usernameId'].")");
+                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$_SESSION['usernameId']." and g.name like '%".$name."%' order by g.name Asc)");
             $allInfo = array();
 
             if($result){
@@ -50,7 +52,7 @@
                                         where ep.userid=".$_SESSION['usernameId'].")  AND NOT g.ID in 
                                         (select gp2.groupID 
                                             from groupparticipants as gp2 
-                                                   where gp2.userID)");
+                                                   where gp2.userID) AND  g.name like '%".$name."%' order by g.name Asc");
 
             if($result){
                         while($row = $result->fetch_assoc()){
@@ -61,12 +63,6 @@
                     }
 
 
-                
-
-        }
-
-     }
-
-  
+    }
     echo json_encode($arrayInfo);
 ?>
