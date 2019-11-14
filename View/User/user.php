@@ -61,6 +61,25 @@
                     width : 45%;
                     margin-left:20%
                 }
+                input[type=text], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                }
+
+                input[type=date], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                }
             </style>
         </head>
         <body>
@@ -69,14 +88,41 @@
         <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span><br>
         <input type="text" id="searchUserInput" placeholder="Search User...">
         <button id="searchUserButton">Search</button>
-        <button id="createUserButton">Create</button>
+        <button id="createUserButton" data-toggle="modal", data-target = "#createEventModal">Create</button>
         <div id="UserSearched">
 
         </div>
+            <!--MODAL SECTION -->
 
+            <div class="modal fade" id="createEventModal">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title">Create A New User</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <span> Name :</span><br> <input type="text" id="uName" ><br>
+                            <span> Date Of Birth :</span><br> <input type="date" id="userDOB"><br>
+                            <span> Email :</span><br> <input type="text" id="userEmail"> <br>
+                            <span> UserName :</span><br><input type="text" id="userName"><br>
+                            <span> Password :</span><br><input type="text" id="userPassword"><br>
+                            <span> Is Admin :</span><br><input type="checkbox" id="isAdmin"><br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="saveUser" class="btn btn-default" data-dismiss="modal">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <script>
-                $(document).ready(function() {
 
+                $(document).ready(function() {
 
                     function createUserBox(arrayofUser){
                         $("#UserSearched").empty();
@@ -92,7 +138,6 @@
                         }
                     }
 
-
                     $("#searchUserButton").click(function(){
                         if($("#searchUserInput").val() != ""){
                             $.post('../../Controller/UserController/searchUser.php',{name:$("#searchUserInput").val()},function(data){
@@ -104,6 +149,28 @@
                             });
                         }else{
                             alert("You need to enter a user name to search for!");
+                        }
+                    });
+
+                    $("#saveUser").click(function(){
+                        var isAdminVal;
+                        if($("#uName").val() == ""||$("#userDOB").val() == ""||$("#userEmail").val() == ""||$("#userName").val() == "" || $("#userPassword").val() == ""){
+                            alert("All fields must be field");
+                        }else{
+                            if ($("#isAdmin").is(":checked"))
+                            {
+                                isAdminVal = 1;
+                            } else {
+                                isAdminVal = 0;
+                            }
+                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("#userEmail").val(),userName:$("#userName").val(),password:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert("User "+ info[1] +"Created Successfully ");
+                                }else{
+                                    alert("You need to be an admin to create a user");
+                                }
+                            });
                         }
                     });
 
