@@ -24,13 +24,12 @@
 
             $result = $db->query("select 
                                     g.name,
-                                    g.managerID,
-                                    g.creationDate,
-                                    g.eventID,
-                                    e.name as eventName
+                                    g.ID,
+                                    e.name as eventName,
+                                    Case When true then 1 end as isRegistered
                                     from groups as g 
                                     left join events as e on e.ID=g.eventID
-                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =11)");
+                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$_SESSION['usernameId'].")");
             $allInfo = array();
 
             if($result){
@@ -42,18 +41,16 @@
             }
 
             $result = $db->query("select g.ID,g.name,e.name as eventName,Case When true then 0 end as isRegistered 
-            from groups as g 
-            left join groupparticipants as gp on gp.groupID = g.id 
-            left join events as e on e.ID = g.eventID
-            where eventID in 
-                (select e.Id 
-                from eventparticipants as ep 
-                inner join events as e on e.Id = ep.eventID 
-                where ep.userid=".$_SESSION['usernameId'].") 
-                OR g.ID in 
-                    (select gp2.groupID 
-                    from groupparticipants as gp2 
-                    where gp2.userID)");
+                                     from groups as g 
+                                     left join events as e on e.ID = g.eventID
+                                     where eventID in 
+                                     (select e.Id 
+                                        from eventparticipants as ep 
+                                        inner join events as e on e.Id = ep.eventID 
+                                        where ep.userid=".$_SESSION['usernameId'].")  AND NOT g.ID in 
+                                        (select gp2.groupID 
+                                            from groupparticipants as gp2 
+                                                   where gp2.userID)");
 
             if($result){
                         while($row = $result->fetch_assoc()){
@@ -63,8 +60,13 @@
                         $arrayInfo[1] = $allInfo;
                     }
 
+
+                
+
         }
 
      }
+
+  
     echo json_encode($arrayInfo);
 ?>

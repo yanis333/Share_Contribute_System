@@ -113,7 +113,22 @@
                             $("#group").append(eventHtmlBox);
                         }
                     }
-                   
+
+                    $("#searchGroupButton").click(function(){
+                        if($("#searchGroupInput").val() != ""){
+                            $.post('../../Controller/EventController/searchEvent.php',{name:$("#searchGroupInput").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createGroupBox("All Events you searched for!",info[1]);
+                                    //createEventBox("Results for yopur search !",info[1])
+                                }else{
+                                    createGroupBox("No Events for this search !",[]);
+                                }
+                            });
+                        }else{
+                            alert("You need to search for a specific event");
+                        }
+                    });
 
 
                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
