@@ -20,8 +20,10 @@
                 $arrayInfo[1] = $allInfo;
             }
 
-            }else if($_SESSION["username"]!=null) {
+            } else if($_SESSION["username"]!=null) {
 
+            $name = $_POST['name'];
+            
             $result = $db->query("select 
                                     g.name,
                                     g.ID,
@@ -47,10 +49,10 @@
                                      (select e.Id 
                                         from eventparticipants as ep 
                                         inner join events as e on e.Id = ep.eventID 
-                                        where ep.userid=1)  AND NOT g.ID in 
+                                        where ep.userid=".$_SESSION['usernameId'].")  AND NOT g.ID in 
                                         (select gp2.groupID 
                                             from groupparticipants as gp2 
-                                                   where gp2.userID) AND  g.name like '%$.$name.%' order by g.name Asc");
+                                                   where gp2.userID) AND  g.name like '%".$name."%' order by g.name Asc");
 
             if($result){
                         while($row = $result->fetch_assoc()){

@@ -193,8 +193,10 @@
 
             <script>
                 $(document).ready(function() {
+                    
                     $("#mainSpecificGroup").hide();
                     $('#searchGroupInput').val('');
+
                     $(document).on("click","button",function(){
                      if(this.id.includes("groupOpen")){
                          var idOfButtonClicked = ($(this).attr('value'));
