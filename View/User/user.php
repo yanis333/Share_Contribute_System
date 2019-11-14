@@ -124,17 +124,40 @@
 
                 $(document).ready(function() {
 
-                    function createUserBox(arrayofUser){
+                    addUserButton();
+                    // This function checks the current user if admin then he can add a new user
+                    function addUserButton() {
+                        $.post('../../Controller/isAdmin.php',{},function (data) {
+                            // data == 0 means the current user is not an admin
+                            if (data == 0) {
+                                $("#createUserButton").hide();
+                            }
+                        })
+                    }
+                    function createUserBox(arrayofUser, isAdmin){
                         $("#UserSearched").empty();
-                        for(var x = 0; x<arrayofUser.length;x++ ){
-                            var userHtmlBox = "<div class = 'userGroup'> "+
-                                                "<span> User Name : "+arrayofUser[x]['name']+"</span>"+
-                                                "<button id= \"DeleteUserId"+x+"\" class='userButton'>Delete</button>"+
-                                                "<button id= \"EditUserId"+x+"\" class='userButton'>Edit</button>"+
-                                                "<button id= \"MessageUserId"+x+"\" class='userButton'>Message</button>"
-                                                userHtmlBox += "</div>"
-                                                
-                            $("#UserSearched").append(userHtmlBox);
+
+                        // If the logged in user is an Admin he can see all three buttons.
+                        if(isAdmin) {
+                            for(var x = 0; x<arrayofUser.length;x++ ){
+                                var userHtmlBox = "<div class = 'userGroup'> "+
+                                    "<span> User Name : "+arrayofUser[x]['name']+"</span>"+
+                                    "<button id= \"DeleteUserId"+x+"\" class='userButton'>Delete</button>"+
+                                    "<button id= \"EditUserId"+x+"\" class='userButton'>Edit</button>"+
+                                    "<button id= \"MessageUserId"+x+"\" class='userButton'>Message</button>"
+                                userHtmlBox += "</div>"
+
+                                $("#UserSearched").append(userHtmlBox);
+                            }
+                        } else {
+                            for(var x = 0; x<arrayofUser.length;x++ ){
+                                var userHtmlBox = "<div class = 'userGroup'> "+
+                                    "<span> User Name : "+arrayofUser[x]['name']+"</span>"+
+                                    "<button id= \"MessageUserId"+x+"\" class='userButton'>Message</button>"
+                                userHtmlBox += "</div>"
+
+                                $("#UserSearched").append(userHtmlBox);
+                            }
                         }
                     }
 
@@ -143,7 +166,7 @@
                             $.post('../../Controller/UserController/searchUser.php',{name:$("#searchUserInput").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createUserBox(info[1]);
+                                    createUserBox(info[1], info[2]);
                                 }else{
                                 }
                             });
