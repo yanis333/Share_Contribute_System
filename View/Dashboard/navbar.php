@@ -60,6 +60,7 @@
                 right: 25px;
                 font-size: 36px;
                 margin-left: 50px;
+                cursor:pointer;
                 }
 
                 #main {
@@ -75,7 +76,7 @@
         </head>
         <body>
         <div id="mySidenav">
-        <a href="" class="closebtn" id="closeNav">&times;</a>
+        <a class="closebtn" id="closeNav">&times;</a>
         <a href="../Dashboard/dashboard.php">Home</a>
         <a href="../Profil/profil.php">Profile</a>
         <a href="../User/user.php">Users</a>
