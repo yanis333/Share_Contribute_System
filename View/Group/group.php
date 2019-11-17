@@ -145,6 +145,14 @@
                 float: left;
                 width: 50%;
             }
+
+            .userGroupPost {
+                margin-top :2%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 90%;
+            }
           
             </style>
         </head>
@@ -210,9 +218,9 @@
                     $('#searchGroupInput').val('');
 
                     $(document).on("click","button",function(){
-                     if(this.id.includes("groupOpen")){
-                         var idOfButtonClicked = ($(this).attr('value'));
-                         $.post('../../Controller/GroupController/getGroupInfoById.php',{id:idOfButtonClicked},function(data){
+                        if(this.id.includes("groupOpen")){
+                            var idOfButtonClicked = ($(this).attr('value'));
+                            $.post('../../Controller/GroupController/getGroupInfoById.php',{id:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     $("#mainSpecificGroup").show();
@@ -220,9 +228,11 @@
                                     $("#groupName").text(info[1]['groupheader'][0]['name']);
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant']);
+                                    createPostBox(info[1]['groupPostContent']);
                                 }
                             });
-                    }});
+                        }
+                    });
 
 
                     function createGroupBox(triggerAction,arrayofEvent){
@@ -272,6 +282,38 @@
                         }
                     }
 
+                    function createPostBox(arrayofPost){
+                        $("#postContentDiv").empty();
+                        $("#nbPostGroup").text(arrayofPost.length);
+                        for(var x = 0; x<arrayofPost.length;x++ ){
+                            var postHtmlBox = "<div class = 'userGroupPost'>" +
+                                                "<h5>"+arrayofPost[x]['name']+"</h4> "+
+                                                "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
+                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
+                                                "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
+                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
+                                                //createCommentBox(arrayofPost[x]['children'])+
+                                                "</div>"
+                                                
+                            $("#postContentDiv").append(postHtmlBox);
+                        }
+                    }
+
+                    function createCommentBox(arrayofComment){
+                        //$("#nbPostEvent").text(arrayofComment.length);
+                        var commentHtmlBox = "<br><br>";
+                        for(var x = 0; x<arrayofComment.length;x++ ){
+                             commentHtmlBox += "<div style = 'border-top: 1px black solid;margin-left:2%'>" +
+                                                "<span style=\"margin-right:5%\">"+arrayofComment[x]['name']+"</span> "+
+                                                "<span> "+arrayofComment[x]['date']+"</span>"+
+                                                "<h6>"+arrayofComment[x]['comment']+"</h6>"+
+                                                "</div><br>"
+                                                
+                            
+                        }
+                        return commentHtmlBox;
+                    }
+
                     $("#searchGroupButton").click(function(){
                         if($("#searchGroupInput").val() != ""){
                             $.post('../../Controller/GroupController/searchGroup.php',{name:$("#searchGroupInput").val()},function(data){
@@ -305,25 +347,36 @@
                             });                   
                          });
 
-                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
-                            var info = JSON.parse(data);
+                    $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
+                        var info = JSON.parse(data);
                             if(info[0]){
                                 createGroupBox("All groups you can join or are currently in !",info[1]);
                             }else{
                                 
                             }
-                        });
+                    });
 
-                        $.post('../../Controller/GroupController/getMyGroups.php',{},function(data){
-                            var info = JSON.parse(data);
+                    $.post('../../Controller/GroupController/getMyGroups.php',{},function(data){
+                        var info = JSON.parse(data);
                             if(info[0]){
                                 MyGroupBox(info[1]);
                             }else{
                                 alert("LOL");
                             }
-                        });
+                    });
 
-
+                    $("#groupPostText").click(function(){
+                        if($("#postText").val() != ""){
+                            $.post('../../Controller/GroupController/postContent.php',{content:$("#postText").val(),type:"Text",groupID:$("#storeGroupId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert('How I move');
+                                    createPostBox(info[1]['groupPostContent']);
+                                }else{
+                                }
+                            });
+                        }
+                    });
 
                 });
             </script>

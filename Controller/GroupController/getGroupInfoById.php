@@ -40,10 +40,22 @@
                     $arrayInfo[0] = true;
                     $arrayInfo[1]['groupParticipant'] = $allInfo;
                 }
-    
-             
-    
-            
+                
+                $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
+                                inner join users as u on u.id = p.userID where pt.groupID = ".$idSelected." order by p.date desc");
+                if($result){
+                    while($row = $result->fetch_assoc()){
+                    $allCommentInfo = array();
+                    /*$result2 = $db->query("select u.name,c.comment,c.date from commentpostgroup as c inner join users as u on u.ID = c.userID where c.postID = ".$row['ID']."");
+                    while($row2 = $result2->fetch_assoc()){
+                        $allCommentInfo[] = $row2;
+                    }
+                    $row['children'] = $allCommentInfo;*/
+                    $allInfo[] = $row;
+                    }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['groupPostContent'] = $allInfo;
+                }           
     
             }
 
