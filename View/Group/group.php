@@ -131,9 +131,9 @@
                 margin-top :2%;
                 margin-left : 3%;
                 border-radius: 5px;
-                padding: 10px;
                 width: 40%;
-                float:left;  
+                float:left;
+                padding-bottom : 10px;  
             }
             
             .flexBox {
@@ -151,7 +151,7 @@
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
-                width: 90%;
+                width: 88%;
             }
           
             </style>
@@ -231,7 +231,22 @@
                                     createPostBox(info[1]['groupPostContent']);
                                 }
                             });
+                        }else if(this.id.includes("commentPostIdButton")){
+                        var idOfButtonClicked = this.id.substring(19);
+                        if($("commentPostId"+idOfButtonClicked).val() != ""){
+                            var saliha ="#commentPostId"+idOfButtonClicked;
+                            var yanis = $("#commentPostId"+idOfButtonClicked).val();
+
+                            $.post('../../Controller/GroupController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),groupId:$("#storeGroupId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert('Yanis est beau');
+                                    createPostBox(info[1]['groupPostContent']);
+                                }else{
+                                }
+                            });
                         }
+                       }
                     });
 
 
@@ -292,7 +307,7 @@
                                                 "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
                                                 "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
                                                 "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
-                                                //createCommentBox(arrayofPost[x]['children'])+
+                                                createCommentBox(arrayofPost[x]['children'])+
                                                 "</div>"
                                                 
                             $("#postContentDiv").append(postHtmlBox);
@@ -309,7 +324,7 @@
                                                 "<h6>"+arrayofComment[x]['comment']+"</h6>"+
                                                 "</div><br>"
                                                 
-                            
+
                         }
                         return commentHtmlBox;
                     }
@@ -370,8 +385,7 @@
                             $.post('../../Controller/GroupController/postContent.php',{content:$("#postText").val(),type:"Text",groupID:$("#storeGroupId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    alert('How I move');
-                                    createPostBox(info[1]['groupPostContent']);
+                                    createPostBox(info[1]);
                                 }else{
                                 }
                             });
