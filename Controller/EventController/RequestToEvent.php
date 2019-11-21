@@ -3,28 +3,24 @@
     session_start();
     $db = new DB();
     $arrayInfo = array();
+    $allInfo= array();
     $arrayInfo[0] = false;
-    if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
+    if(isset($_SESSION['username']))
+    if($_SESSION["username"] != null){
+        $eventId = $_POST['eventId'];
         $name = $_POST['name'];
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where name like '%".$name."%' order by name Asc");
-        $allInfo = array();
 
-        if($result){
-            while($row = $result->fetch_assoc()){
-                $allInfo[] = $row;
-            }
-            $arrayInfo[0] = true;
-            $arrayInfo[1] = $allInfo;
+        if($eventId == "" || $name == ""){
+            echo json_encode(false);
+            return;
         }
-    }
-    else if(isset($_SESSION['username'])){
-        $name = $_POST['name'];
-        
+        $db->query("insert into eventrequest(userID,eventID) values(".$_SESSION["usernameId"].",".$eventId.")");
+
         $result = $db->query("select 
                             e.id as ID,
                             e.name as name,
                             case
-                                when e.id in (select eventID from eventparticipants where userID = ".$_SESSION['usernameId'].") then 1 
+                                when e.id in (select eventID from eventparticipants where userID = ".$_SESSION['usernameId'].") then 1
                                 when e.id in (select eventID from eventrequest where userID = ".$_SESSION["usernameId"].") then 2
                                 else 0
                                 end as isRegistered

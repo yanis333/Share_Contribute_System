@@ -23,6 +23,7 @@
                                     e.name,
                                     case
                                     when e.id in (select eventID from eventparticipants where userID = ".$_SESSION["usernameId"].") then 1
+                                    when e.id in (select eventID from eventrequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
                                     from events as e 

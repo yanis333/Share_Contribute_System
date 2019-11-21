@@ -50,9 +50,15 @@
                 transition: 0.3s;
                 }
 
+
+
                 #mySidenav a:hover,#userLogout:hover{
                 color: #f1f1f1;
                 }
+
+                .notif {
+                    animation: red 1300ms infinite;
+                    }
 
                 #mySidenav .closebtn {
                 position: absolute;
@@ -72,6 +78,10 @@
                 .sidenav {padding-top: 15px;}
                 .sidenav a {font-size: 18px;}
                 }
+                @keyframes red {
+                0% { color: red;  }
+                100% { color: white; box-shadow: 0 0 5px white; }
+                }
             </style>
         </head>
         <body>
@@ -83,6 +93,7 @@
         <a href="../User/user.php">Users</a>
         <a href="../Group/group.php">Groups</a>
         <a href="../Event/event.php">Events</a>
+        <a  href="../Notification/notification.php"><span id ="notif">Notifications</span></a>
         <p id="userLogout" >Logout</p>
         </div>
 
@@ -95,6 +106,29 @@
                             window.location.href="../home.php";
                         }
                     });
+
+                    
+
+                    function checknotif(){
+                        $.post('../../Controller/NotificationController/isnotification.php',{},function(data){
+                        var info = JSON.parse(data);
+                        if(info[0]){
+                            if(info[1].length >0 || info[2].length >0){
+                                addRed();
+                            }else{
+                                removeRed();
+                            }
+                        }
+                    });
+                    }
+                    checknotif();
+                    setTimeout(function(){ checknotif(); }, 3000);
+                    function addRed(){
+                        $("#notif").addClass("notif");
+                    }
+                    function removeRed(){
+                        $("#notif").removeClass("notif");
+                    }
 
                     $("#userLogout").click(function(){
                         $.post('../../Controller/LoginController/userLogout.php',{},function(data){

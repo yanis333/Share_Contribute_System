@@ -344,6 +344,15 @@
                                 }else{
                                 }
                             });
+                       }else if(this.id.includes("eventRegister")){
+                        var idOfButtonClicked = this.id.substring(13);
+                            $.post('../../Controller/EventController/RequestToEvent.php',{eventId:idOfButtonClicked,name:$("#searchEventInput").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createEventBox("All Events you searched for!",info[1]);
+                                }else{
+                                }
+                            });
                        }
                     
                 
@@ -356,9 +365,11 @@
                             var eventHtmlBox = "<div class = 'eventGroup' > "+
                                                 "<span> Event Name : "+arrayofEvent[x]['name']+"</span>";
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
-                                                    eventHtmlBox +=  "<button id= \"eventRegister"+arrayofEvent[x]['ID']+"\" class='eventButton'  >Register</button><br>";
-                                                }else{
+                                                    eventHtmlBox +=  "<button id= \"eventRegister"+arrayofEvent[x]['ID']+"\" class='eventButton'  >Request</button><br>";
+                                                }else if(arrayofEvent[x]['isRegistered'] == 1){
                                                     eventHtmlBox +=  "<button id= \"eventOpen"+arrayofEvent[x]['ID']+"\" class='eventButton'>Open</button><br>";
+                                                }else{
+                                                    eventHtmlBox +=  "<button  class='eventButton' disabled>Pending request</button><br>";
                                                 }
                                                 
                                                 eventHtmlBox +=  "</div>"
@@ -524,7 +535,6 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createEventBox("All Events you searched for!",info[1]);
-                                    //createEventBox("Results for yopur search !",info[1])
                                 }else{
                                     createEventBox("No Events for this search !",[]);
                                 }
