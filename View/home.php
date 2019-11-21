@@ -78,7 +78,7 @@
                         var info = JSON.parse(data);
                         if(info != "false"){
                             if(info[0]){
-                                window.location.href = "View/Dashboard/dashboard.php"
+                                window.location.href = "../View/Dashboard/dashboard.php"
                             }
                             else{
                                 alert("Error, wrong credentials.");

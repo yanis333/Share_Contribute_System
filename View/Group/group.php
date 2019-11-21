@@ -153,6 +153,18 @@
                 padding: 20px;
                 width: 88%;
             }
+
+            .userGroup {
+                margin-top :2%;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 90%;
+            }
+
+            .userButton{
+                    float:right;
+            }
           
             </style>
         </head>
@@ -185,13 +197,29 @@
                 <div class ="groupHeader">
                     <h3><span id="groupName"></span></h3>
                     <input id="storeGroupId" hidden />
-                    <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
+                    <input id="storeEventId" hidden />
+                    <button id="inviteUsersToGroup" data-toggle="modal" data-target="#inviteUserModal">Invite</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantGroup"></span><br>
                     <span>Number of post : </span><span id="nbPostGroup"></span><br>
                     <span>Number of Image : </span><span id="nbImageGroup"></span><br>
                     <span>Number of Video : </span><span id="nbVideoGroup"></span><br>
                 </div>
+
+            <div class="modal fade" id="inviteUserModal">
+                <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Invite event participants to group</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                            <div id="userGroupList"></div>
+                    </div>
+                </div>    
+                </div>
+            </div>
                 <div class="groupBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="groupPostText" >Post</button><button >Image</button><button >Video</button>
@@ -213,7 +241,6 @@
 
             <script>
                 $(document).ready(function() {
-                    
                     $("#mainSpecificGroup").hide();
                     $('#searchGroupInput').val('');
 
@@ -232,21 +259,30 @@
                                 }
                             });
                         }else if(this.id.includes("commentPostIdButton")){
-                        var idOfButtonClicked = this.id.substring(19);
-                        if($("commentPostId"+idOfButtonClicked).val() != ""){
-                            var saliha ="#commentPostId"+idOfButtonClicked;
-                            var yanis = $("#commentPostId"+idOfButtonClicked).val();
+                            var idOfButtonClicked = this.id.substring(19);
+                            if($("commentPostId"+idOfButtonClicked).val() != ""){
+                                var saliha ="#commentPostId"+idOfButtonClicked;
+                                var yanis = $("#commentPostId"+idOfButtonClicked).val();
 
-                            $.post('../../Controller/GroupController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),groupId:$("#storeGroupId").val()},function(data){
+                                $.post('../../Controller/GroupController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),groupId:$("#storeGroupId").val()},function(data){
+                                    var info = JSON.parse(data);
+                                    if(info[0]){
+                                        createPostBox(info[1]['groupPostContent']);
+                                    }else{
+                                    }
+                                });
+                            }
+                        }else if(this.id.includes("addUserId")){
+                            var idOfButtonClicked = this.id.substring(9);
+                            $.post('../../Controller/GroupController/addUserToGroup.php',{id:idOfButtonClicked,groupId:$("#storeGroupId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    alert('Yanis est beau');
-                                    createPostBox(info[1]['groupPostContent']);
+                                    createUserBox(info[1]);
+                                    createRightAllParticipantsBox(info[2]);
                                 }else{
                                 }
                             });
                         }
-                       }
                     });
 
 
@@ -275,7 +311,7 @@
                         $("#nbParticipantGroup").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
-                                                "<span> "+(x+1)+")"+arrayofAllParticipant[x]['name']+"</span>";
+                                                "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                                                 
                                                 participantHtmlBox +=  "</div>"
                                                 
@@ -289,7 +325,7 @@
 
                         for(var x = 0; x<arrayOfMyGroups.length;x++ ){
                             var groupHtmlBox = "<div class = 'allParticipantGroup' > "+
-                                                "<span> "+(x+1)+")"+arrayOfMyGroups[x]['name']+"</span>";
+                                                "<span> "+(x+1)+") "+arrayOfMyGroups[x]['name']+"</span>";
                                                 
                                                 groupHtmlBox +=  "</div>"
                                                 
@@ -376,7 +412,7 @@
                             if(info[0]){
                                 MyGroupBox(info[1]);
                             }else{
-                                alert("LOL");
+                                alert("something wrong happened");
                             }
                     });
 
@@ -391,7 +427,51 @@
                             });
                         }
                     });
+                    
+                    $("#inviteUsersToGroup").click(function(){
+                       $.post('../../Controller/GroupController/getGroupInfoById.php',{id:$("#storeGroupId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                displayUserList(info[1]);
+                            }else{
+                                alert("something wrong happened");
+                            }
+                        });
+                    });
 
+                    function displayUserList(arrayofUser){
+                        $("#userGroupList").empty();
+                   
+                        for(var x = 0; x<arrayofUser['eventparticipants'].length;x++ ){
+                            var userHtmlBox = "<div class = 'userGroup'> "+
+                                                "<span> User Name : "+arrayofUser['eventparticipants'][x]['name']+"</span>";
+                                                if(arrayofUser['eventparticipants'][x]['isRegistered'] == 1){
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
+                                                }else{
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton'>Add</button><br>";
+                                                }
+                                                userHtmlBox += "</div>"
+
+                            $("#userGroupList").append(userHtmlBox);
+                        }
+                   
+                    }
+
+                    function createUserBox(arrayofUser){
+                        $("#userGroupList").empty();
+                        for(var x = 0; x<arrayofUser.length;x++ ){
+                            var userHtmlBox = "<div class = 'userGroup'> "+
+                                                "<span> User Name : "+arrayofUser[x]['name']+"</span>";
+                                                if(arrayofUser[x]['isRegistered'] == 0){
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser[x]['ID']+"\" class='userButton'>Add</button><br>";
+                                                }else{
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser[x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
+                                                }
+                                                userHtmlBox += "</div>"
+                                                
+                            $("#userGroupList").append(userHtmlBox);
+                        }
+                    }
                 });
             </script>
         </body>

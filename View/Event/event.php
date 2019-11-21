@@ -62,6 +62,7 @@
                 .eventGroup {
                 margin-top :2%;
                 margin-left : 25%;
+                margin-bottom : 1%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 20px;
@@ -221,16 +222,16 @@
             
         </div>
 
-                                                    <!--MODAL SECTION -->
-         <div class="modal fade" id="inviteUserModal">
+        <!--MODAL SECTION -->
+        <div class="modal fade" id="inviteUserModal">
                 <div class="modal-dialog">
                 
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                    
-                    <h4 class="modal-title">Invite User</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Invite User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <input type="text" id="searchUserToInvite" placeholder="Search User...">
@@ -240,7 +241,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
                 
@@ -248,33 +249,28 @@
         </div>
 
         <div class="modal fade" id="addNewGroup">
-                <div class="modal-dialog">
+            <div class="modal-dialog">
                 
                 <!-- Modal content-->
                 <div class="modal-content">
 
                     <div class="modal-header">
-                    <h4 class="modal-title">Name of the group</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Name of the group</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-
-                   
 
                     <div class="modal-body">
                    
-                    <span> Group Name :</span> <input type="text" id="groupName" placeholder="Name">
-                        <div id="userEventList"> </div>
-                        <br>
-                        <button id="addGroupButton" data-dismiss="modal">Create Group</button>
-                        </div>
+                        <span> Group Name :</span> <input type="text" id="groupName" placeholder="Name">
+                            <div id="userEventList"> </div>
+                            <br>
+                            <button id="addGroupButton" data-dismiss="modal">Create Group</button>
                     </div>
-                    
-                  
-
-                    
-                </div>
+                </div>    
+           
+            </div>
                 
-                </div>
+        </div>
         </div>
     
         <div class="modal fade" id="createEventModal">
@@ -376,7 +372,7 @@
                         $("#nbParticipantEvent").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
-                                                "<span> "+(x+1)+")"+arrayofAllParticipant[x]['name']+"</span>";
+                                                "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                                                 
                                                 participantHtmlBox +=  "</div>"
                                                 
@@ -389,7 +385,7 @@
                         $("#nbGroupEvent").text(arrayofAllGroup.length);
                         for(var x = 0; x<arrayofAllGroup.length;x++ ){
                             var groupHtmlBox = "<div class = 'allGroup' > "+
-                                                "<span> "+(x+1)+")"+arrayofAllGroup[x]['name']+"</span>";
+                                                "<span> "+(x+1)+") "+arrayofAllGroup[x]['name']+"</span>";
                                                 
                                                 groupHtmlBox +=  "</div>"
                                                 
