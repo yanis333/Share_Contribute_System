@@ -16,7 +16,7 @@ if(isset($_SESSION['username']))
             echo json_encode(false);
             return;
         }
-        $db->query("insert into events(name,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$address."','".$phone."',1,'".$type."')");
+        $db->query("insert into events(name,managerID,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$_SESSION['usernameId']."','".$address."','".$phone."',1,'".$type."')");
         $result = $db->query("select ID, name from events order by ID desc");
         if($result){
 
