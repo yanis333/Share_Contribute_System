@@ -4,21 +4,13 @@
     $db = new DB();
     $arrayInfo = array();
     $arrayInfo[0] = false;
-    if(isset($_SESSION['username']))
-    if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
+    if($_SESSION["username"]!=null){
+        $groupID = $_POST['id'];
 
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events order by name Asc");
+        $result = $db->query("update groups set isDeleted=1 where id=".$groupID);
         $allInfo = array();
 
-        if($result){
-            while($row = $result->fetch_assoc()){
-                $allInfo[] = $row;
-            }
-            $arrayInfo[0] = true;
-            $arrayInfo[1] = $allInfo;
-        }
-    }else{if($_SESSION["username"]!=null){
-            $result = $db->query("select 
+        $result = $db->query("select 
                                     e.ID,
                                     e.name,
                                     case
@@ -39,8 +31,8 @@
                 $arrayInfo[0] = true;
                 $arrayInfo[1] = $allInfo;
             }
-        }
 
+     
     }
     echo json_encode($arrayInfo);
 ?>

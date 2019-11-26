@@ -169,6 +169,13 @@
                 #event {
                     overflow-y:auto;
                 }
+                
+                #deleteEventButton {
+                    background-color : red;
+                    border-radius : 5px ;
+                    border : 1px solid black;
+                }
+
             </style>
         </head>
         <body style="overflow-x:hidden">
@@ -188,7 +195,9 @@
                     <h3><span id="eventChoseName"></span></h3>
                     <input id="storeEventId" hidden />
                     <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
-                    <button>Edit</button><br><br>
+                    <button>Edit</button>
+                    <button id="deleteEventButton">Delete</button>
+                    <button id="archiveEventButton">Archive</button><br><br>
                     <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>
@@ -301,8 +310,8 @@
             <script>
                 $(document).ready(function() {
                     $("#mainSpecificEvent").hide();
-
-
+                    $("#deleteEventButton").hide();
+                    $("#archiveEventButton").hide();
 
                     $(document).on("click","button",function(){
                        if(this.id.includes("eventOpen")){
@@ -317,6 +326,11 @@
                                     createRightAllParticipantsBox(info[1]['eventParticipant']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
                                     createPostBox(info[1]['eventPostContent']);
+                                    if(info[1]['eventManager'][0]['managerID'] === info[1]['loggedInUserId'])
+                                    {
+                                        $("#deleteEventButton").show();
+                                        $("#archiveEventButton").show();
+                                    }
                                 }else{
                                 }
                             });
@@ -567,6 +581,17 @@
                             }
                         });
                         }
+                    });
+
+                    $("#deleteEventButton").click(function(){
+                        /*$.post('../../Controller/EventController/deleteEvent.php',{id:$("#storeEventId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                alert("Event deleted Successfully");
+                            }else{
+                                alert("You need to be an admin to create an event!");
+                            }
+                        });*/
                     });
 
                 });

@@ -111,7 +111,7 @@
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 padding: 10px;
-                width: 150%;
+                width: 100%;
                 float:left; 
                 justify-content : flex-start;      
             }
@@ -184,7 +184,12 @@
                 <div class="column" id="group" ></div>
                 <div>
                     <div class="myGroupClass">
-                        <h3>My groups</h3>
+                        <h3>Groups I am in</h3>
+                        <div id="groupsParticipating"></div>
+                        <br>
+                    </div><br>
+                    <div class="myGroupClass">
+                        <h3>My groups (as manager)</h3>
                         <div id="myGroups"></div>
                         <br>
                     </div><br>
@@ -199,6 +204,8 @@
                     <input id="storeGroupId" hidden />
                     <input id="storeEventId" hidden />
                     <button id="inviteUsersToGroup" data-toggle="modal" data-target="#inviteUserModal">Invite</button>
+                    <button id="deleteGroupButton">Delete</button>
+                    <button id="archiveGroupButton">Archive</button>    
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantGroup"></span><br>
                     <span>Number of post : </span><span id="nbPostGroup"></span><br>
@@ -243,6 +250,8 @@
                 $(document).ready(function() {
                     $("#mainSpecificGroup").hide();
                     $('#searchGroupInput').val('');
+                    $("#deleteGroupButton").hide();
+                    $("#archiveGroupButton").hide();
 
                     $(document).on("click","button",function(){
                         if(this.id.includes("groupOpen")){
@@ -256,6 +265,10 @@
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant']);
                                     createPostBox(info[1]['groupPostContent']);
+                                    if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
+                                        $("#deleteGroupButton").show();
+                                        $("#archiveGroupButton").show();
+                                    }
                                 }
                             });
                         }else if(this.id.includes("commentPostIdButton")){
@@ -288,7 +301,13 @@
 
                     function createGroupBox(triggerAction,arrayofEvent){
                         $("#group").empty();
-                        $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
+                        if(triggerAction === "") {
+
+                        }
+                        else {
+                            $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
+                        }
+                        
                         for(var x = 0; x<arrayofEvent.length;x++ ){
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
@@ -322,7 +341,6 @@
                     function MyGroupBox(arrayOfMyGroups){
                         $("#myGroups").empty();
 
-
                         for(var x = 0; x<arrayOfMyGroups.length;x++ ){
                             var groupHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayOfMyGroups[x]['name']+"</span>";
@@ -330,6 +348,19 @@
                                                 groupHtmlBox +=  "</div>"
                                                 
                             $("#myGroups").append(groupHtmlBox);
+                        }
+                    }
+
+                    function ParticipatingGroupBox(arrayOfMyGroups){
+                        $("#groupsParticipating").empty();
+
+                        for(var x = 0; x<arrayOfMyGroups.length;x++ ){
+                            var groupHtmlBox = "<div class = 'allParticipantGroup' > "+
+                                                "<span> "+(x+1)+") "+arrayOfMyGroups[x]['name']+"</span>";
+                                                
+                                                groupHtmlBox +=  "</div>"
+                                                
+                            $("#groupsParticipating").append(groupHtmlBox);
                         }
                     }
 
@@ -410,7 +441,8 @@
                     $.post('../../Controller/GroupController/getMyGroups.php',{},function(data){
                         var info = JSON.parse(data);
                             if(info[0]){
-                                MyGroupBox(info[1]);
+                                MyGroupBox(info[1]['myGroups']);
+                                ParticipatingGroupBox(info[1]['groupsParticipating']);
                             }else{
                                 alert("something wrong happened");
                             }
@@ -472,6 +504,31 @@
                             $("#userGroupList").append(userHtmlBox);
                         }
                     }
+
+                    $("#deleteGroupButton").click(function() {
+                        $.post('../../Controller/GroupController/deleteGroup.php',{id:$("#storeGroupId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                $("#mainSpecificGroup").hide();
+                                $("#mainGenericGroup").show();
+                                createGroupBox("",info[1]);
+                                alert('Group was successfully deleted');    
+                            }else{
+                                alert("something wrong happened");
+                            }
+                        });
+                    });
+
+                    $("#archiveGroupButton").click(function() {
+                        $.post('../../Controller/GroupController/deleteGroup.php',{id:$("#storeGroupId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                displayUserList(info[1]);
+                            }else{
+                                alert("something wrong happened");
+                            }
+                        });
+                    });
                 });
             </script>
         </body>

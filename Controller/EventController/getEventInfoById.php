@@ -87,6 +87,21 @@
                 $arrayInfo[1]['eventPostContent'] = $allInfo;
             }
 
+            $result = $db->query("select 
+                                    e.managerID
+                                    from events as e 
+                                    where e.ID =".$idSelected."");
+            $allInfo = array();
+
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['eventManager'] = $allInfo;
+                $arrayInfo[1]['loggedInUserId'] = $_SESSION['usernameId'];
+            }
+
         }
 
     }

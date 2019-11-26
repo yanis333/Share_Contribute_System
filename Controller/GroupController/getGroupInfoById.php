@@ -14,7 +14,7 @@
                                         g.ID,
                                         g.name
                                         from groups as g
-                                        where g.id =".$idSelected." order by g.name Asc");
+                                        where g.isDeleted=0 and g.id =".$idSelected." order by g.name Asc");
                 $allInfo = array();
     
                 if($result){
@@ -43,10 +43,11 @@
                 
                 $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
                                 inner join users as u on u.id = p.userID where pt.groupID = ".$idSelected." order by p.date desc");
+                $allInfo = array();
+                
                 if($result){
                     while($row = $result->fetch_assoc()){
                     $allCommentInfo = array();
-                    $allInfo = array();
                     $result2 = $db->query("select u.name,c.comment,c.date from commentpostgroup as c inner join users as u on u.ID = c.userID where c.postID = ".$row['ID']."");
                     while($row2 = $result2->fetch_assoc()){
                         $allCommentInfo[] = $row2;
@@ -56,7 +57,7 @@
                     }
                 $arrayInfo[0] = true;
                 $arrayInfo[1]['groupPostContent'] = $allInfo;
-                }           
+                }        
                 
                 $result = $db->query("select u.ID, u.name,
                                         Case 
@@ -76,6 +77,21 @@
                     $arrayInfo[0] = true;
                     $arrayInfo[1]['eventparticipants'] = $allInfo;
                 }
+
+            $result = $db->query("select 
+                                    g.managerID
+                                    from groups as g 
+                                    where g.ID =".$idSelected."");
+            $allInfo = array();
+
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['groupManager'] = $allInfo;
+                $arrayInfo[1]['loggedInUserId'] = $_SESSION['usernameId'];
+            }
             }
 
     }

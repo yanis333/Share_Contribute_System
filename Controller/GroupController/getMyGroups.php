@@ -8,7 +8,18 @@
     if(isset($_SESSION['username'])){ 
     if($_SESSION["username"] != null){
 
+        $result = $db->query("select name from groups where ID in 
+                            (select groupID from groupparticipants where userID=".$_SESSION['usernameId'].") ");
+        
+        $allInfo = array();
 
+        if($result){
+            while($row = $result->fetch_assoc()){
+                $allInfo[] = $row;
+            }
+            $arrayInfo[0] = true;
+            $arrayInfo[1]['groupsParticipating'] = $allInfo;
+        }
 
         $result = $db->query("select name from groups where managerID=".$_SESSION['usernameId']." ");
         
@@ -19,7 +30,7 @@
                 $allInfo[] = $row;
             }
             $arrayInfo[0] = true;
-            $arrayInfo[1] = $allInfo;
+            $arrayInfo[1]['myGroups'] = $allInfo;
         }
 
     }
