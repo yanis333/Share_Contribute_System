@@ -187,8 +187,8 @@
                 <div class ="eventHeader">
                     <h3><span id="eventChoseName"></span></h3>
                     <input id="storeEventId" hidden />
-                    <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
-                    <button>Edit</button><br><br>
+                    <button id="inviteParticipantH" data-toggle="modal" data-target="#inviteUserModal">Invite</button>
+                    <button id="editParticipantH">Edit</button><br><br>
                     <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>
@@ -354,6 +354,7 @@
                            $.post('../../Controller/EventController/getEventInfoById.php',{id:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
+
                                     $("#mainSpecificEvent").show();
                                     $("#mainGenericEvent").hide();
                                     if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
@@ -364,7 +365,15 @@
                                     $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
                                     $("#storeEventId").val(idOfButtonClicked);
 
-                                    createRightAllParticipantsBox(info[1]['eventParticipant']);
+                                    if(info[1]['canEdit'][0]['canEdit'] == 1){
+                                        $("#inviteParticipantH").show();
+                                        $("#editParticipantH").show();
+                                    }else{
+                                        $("#inviteParticipantH").hide();
+                                        $("#editParticipantH").hide();
+                                    }
+
+                                    createRightAllParticipantsBox(info[1]['eventParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
                                     createPostBox(info[1]['eventPostContent'],info[1]['access']);
                                 }else{
@@ -390,7 +399,7 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createUserBox(info[1]);
-                                    createRightAllParticipantsBox(info[2]);
+                                    createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
                                 }else{
                                 }
                             });
@@ -440,15 +449,16 @@
                             $("#event").append(eventHtmlBox);
                         }
                     }
-                    function createRightAllParticipantsBox(arrayofAllParticipant){
+                    function createRightAllParticipantsBox(arrayofAllParticipant,canEdit){
                         $("#eventAllParticipants").empty();
 
                         $("#nbParticipantEvent").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
-                                                "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>"+
-                                                "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>"
-                                                
+                                                "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
+                                                if(canEdit == 1){
+                                                    participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                                                }
                                                 participantHtmlBox +=  "</div><br>"
                                                 
                             $("#eventAllParticipants").append(participantHtmlBox);

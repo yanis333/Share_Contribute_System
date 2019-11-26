@@ -95,6 +95,24 @@
                 }
                 $arrayInfo[1]['access'] = $allInfo;
             }
+
+            $result = $db->query("Select 
+                                    Case
+                                    when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
+                                    when exists(select ID from events where ID =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    else 0
+                                    end as canEdit
+                                    
+                                    from users
+                                    where id =".$_SESSION['usernameId']."
+                                    ");
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[1]['canEdit'] = $allInfo;
+            }
             
 
         }
