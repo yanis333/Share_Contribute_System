@@ -35,6 +35,14 @@
                 $arrayInfo[0] = true;
                 $arrayInfo[1]['eventPostContent'] = $allInfo;
             }
+            $result = $db->query("select aty.TypeRef as access from accevent as ae inner join acctype as aty on aty.ID = ae.access where ae.eventID = ".$eventID." and ae.userID =".$_SESSION['usernameId']."");
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[1]['access'] = $allInfo;
+            }
     }
     echo json_encode($arrayInfo);
 ?>

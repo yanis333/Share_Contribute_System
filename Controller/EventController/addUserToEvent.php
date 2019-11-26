@@ -16,6 +16,7 @@
             return;
         }
         $db->query("insert into eventparticipants(userID,eventID) values(".$id.",".$eventId.")");
+        $db->query("insert into accevent(userID,access,eventID) values(".$id.",1,".$eventId.")");
 
         $result = $db->query("  select 
                                 u.ID, 
