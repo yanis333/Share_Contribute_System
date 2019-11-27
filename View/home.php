@@ -24,7 +24,7 @@
                 margin-left:30%;
                 margin-top:12%
                 }
-                input[type=text], select {
+                input[type=text], input[type=password], select {
                 width: 100%;
                 padding: 12px 20px;
                 margin: 8px 0;
@@ -45,6 +45,10 @@
                 cursor: pointer;
                 }
 
+                input:hover{
+                    background-color: rgba(0,0,0,0.08);
+                }
+
                 #login:hover {
                 background-color: #45a049;
                 }
@@ -60,7 +64,7 @@
                         <input type="text" id="loginUsername" placeholder="Username...">
 
                         <label >Password</label>
-                        <input type="text" id="loginPassword" placeholder="Password...">
+                        <input type="password" id="loginPassword" placeholder="Password...">
 
                         <input type="button" id="login" value="Login">
                         <span >Forgot <a href="#">password?</a></span>
@@ -71,6 +75,20 @@
 
             <script>
                 $(document).ready(function() {
+
+                // Get the password input field
+                var input = document.getElementById("loginPassword");
+
+                // add listener for key up
+                input.addEventListener("keyup", function(event) {
+                  // Number 13 is the "Enter" key on the keyboard
+                  if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    document.getElementById("login").click();
+                  }
+                });
 
                    $("#login").click(function(){
 
