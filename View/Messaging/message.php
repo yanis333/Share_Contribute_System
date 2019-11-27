@@ -91,7 +91,7 @@
                 </div>
                 <div id="footerConversation">
                 <input type="text" id="inputMessage" />
-                <button id="sendmMessageButton">SEND </button>
+                <button id="sendmMessageButton">Send</button>
                 </div>
             </div>
             
@@ -122,6 +122,20 @@
         </div>
             <script>
                 $(document).ready(function() {
+
+                    // Get the password input field
+                    var input = document.getElementById("inputMessage");
+
+                    // add listener for key up
+                    input.addEventListener("keyup", function(event) {
+                      // Number 13 is the "Enter" key on the keyboard
+                      if (event.keyCode === 13) {
+                        // Cancel the default action, if needed
+                        event.preventDefault();
+                        // Trigger the button element with a click
+                        document.getElementById("sendmMessageButton").click();
+                      }
+                    });
 
                     $(document).on("click","button",function(){
                        if(this.id.includes("userConvo")){
@@ -156,6 +170,12 @@
                                 }else{
                                 }
                             });
+                    /**
+                     * Resets the text to empty for the message input
+                     */
+                    function resetInput(){
+                        $("#inputMessage").val("");
+                    }
 
                     function createMessageBox(arrayofUser){
                         $("#UserSearched").empty();
@@ -218,7 +238,9 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createConvoBox(info[1]);
+                                    resetInput();
                                 }else{
+                                    alert("Sorry, message failed to send.");
                                 }
                             });
                         }else{
