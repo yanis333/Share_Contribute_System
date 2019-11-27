@@ -379,21 +379,18 @@
                                     if(info[1]['canEdit'][0]['canEdit'] == 1){
                                         $("#inviteParticipantH").show();
                                         $("#editParticipantH").show();
+                                        $("#deleteEventButton").show();
+                                        $("#archiveEventButton").show();
                                     }else{
                                         $("#inviteParticipantH").hide();
                                         $("#editParticipantH").hide();
+                                        $("#deleteEventButton").hide();
+                                        $("#archiveEventButton").hide();
                                     }
 
                                     createRightAllParticipantsBox(info[1]['eventParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
-                                    createPostBox(info[1]['eventPostContent']);
-                                    if(info[1]['eventManager'][0]['managerID'] === info[1]['loggedInUserId'])
-                                    {
-                                        $("#deleteEventButton").show();
-                                        $("#archiveEventButton").show();
-                                    }
                                     createPostBox(info[1]['eventPostContent'],info[1]['access']);
-                                }else{
                                 }
                             });
                        }else if(this.id.includes("commentPostIdButton")){
