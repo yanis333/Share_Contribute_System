@@ -82,7 +82,7 @@
                     margin-top :2%;
                     border-radius: 5px;
                     background-color: #f2f2f2;
-                    width: 90%;
+                    width: 95%;
                 }
 
                 .eventButton, .userButton{
@@ -194,8 +194,8 @@
                 <div class ="eventHeader">
                     <h3><span id="eventChoseName"></span></h3>
                     <input id="storeEventId" hidden />
-                    <button data-toggle="modal" data-target="#inviteUserModal">Invite</button>
-                    <button>Edit</button>
+                    <button id="inviteParticipantH" data-toggle="modal" data-target="#inviteUserModal">Invite</button>
+                    <button id="editParticipantH">Edit</button>
                     <button id="deleteEventButton">Delete</button>
                     <button id="archiveEventButton">Archive</button><br><br>
                     <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
@@ -206,7 +206,7 @@
                     <span>Number of Image : </span><span id="nbImageEvent"></span><br>
                     <span>Number of Video : </span><span id="nbVideoEvent"></span><br>
                 </div>
-                <div class="eventBody">
+                <div id="postForUser" class="eventBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="eventPostText" >Post</button><button >Image</button><button >Video</button>
                     
@@ -307,11 +307,57 @@
                 </div>
         </div>
 
+        <div class="modal fade" id="accessControlModal">
+                <div class="modal-dialog">
+                
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                   
+                    <h4 class="modal-title">Access Player</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                    <span> Name :</span><br> <input type="text" id="nameParticipantAccess" disabled ><br>
+                    <input id="storeUserID" hidden></input>
+                    <span> Current Access :</span><br> <input type="text" id="currentAccessParticipants" disabled><br>
+                    <span> New Access :</span>
+                    <div id="changeAccess"><!--All Access possible-->
+                    <select id="accessSelected">
+                    <option value="View_Only" value> View Only </option>
+                    <option value="View_and_Post"> View and Post </option>
+                    <option value="View_and_Comment"> View and Comment </option>
+                    <option value="All"> All </option>
+                    </select>
+                    </div>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" id="saveAccess" class="btn btn-default" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+                </div>
+        </div>
+
             <script>
                 $(document).ready(function() {
                     $("#mainSpecificEvent").hide();
                     $("#deleteEventButton").hide();
                     $("#archiveEventButton").hide();
+
+                    $("#saveAccess").click(function(){
+                        $.post('../../Controller/EventController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),eventId:$("#storeEventId").val(),access:$("#accessSelected").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert("UPDATED SUCCESSFULLY")
+                                }else{
+                                }
+                            });
+                    });
+
+
 
                     $(document).on("click","button",function(){
                        if(this.id.includes("eventOpen")){
@@ -319,11 +365,26 @@
                            $.post('../../Controller/EventController/getEventInfoById.php',{id:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
+
                                     $("#mainSpecificEvent").show();
                                     $("#mainGenericEvent").hide();
+                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
+                                        $("#postForUser").show();
+                                    }else{
+                                        $("#postForUser").hide();
+                                    }
                                     $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
                                     $("#storeEventId").val(idOfButtonClicked);
-                                    createRightAllParticipantsBox(info[1]['eventParticipant']);
+
+                                    if(info[1]['canEdit'][0]['canEdit'] == 1){
+                                        $("#inviteParticipantH").show();
+                                        $("#editParticipantH").show();
+                                    }else{
+                                        $("#inviteParticipantH").hide();
+                                        $("#editParticipantH").hide();
+                                    }
+
+                                    createRightAllParticipantsBox(info[1]['eventParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
                                     createPostBox(info[1]['eventPostContent']);
                                     if(info[1]['eventManager'][0]['managerID'] === info[1]['loggedInUserId'])
@@ -331,6 +392,7 @@
                                         $("#deleteEventButton").show();
                                         $("#archiveEventButton").show();
                                     }
+                                    createPostBox(info[1]['eventPostContent'],info[1]['access']);
                                 }else{
                                 }
                             });
@@ -343,7 +405,7 @@
                             $.post('../../Controller/EventController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),eventId:$("#storeEventId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createPostBox(info[1]['eventPostContent']);
+                                    createPostBox(info[1]['eventPostContent'],info[1]['access']);
                                 }else{
                                 }
                             });
@@ -354,7 +416,7 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createUserBox(info[1]);
-                                    createRightAllParticipantsBox(info[2]);
+                                    createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
                                 }else{
                                 }
                             });
@@ -367,7 +429,20 @@
                                 }else{
                                 }
                             });
+                       }else if(this.id.includes("participantsAccess")){
+                        var idOfButtonClicked = this.id.substring(18);
+
+                            $.post('../../Controller/EventController/getAccessUser.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#nameParticipantAccess").val(info[1][0]['name']);
+                                    $("#storeUserID").val(info[1][0]['userID']);
+                                    $("#currentAccessParticipants").val(info[1][0]['Type']);
+                                }else{
+                                }
+                            });
                        }
+
                     
                 
                     });
@@ -391,15 +466,17 @@
                             $("#event").append(eventHtmlBox);
                         }
                     }
-                    function createRightAllParticipantsBox(arrayofAllParticipant){
+                    function createRightAllParticipantsBox(arrayofAllParticipant,canEdit){
                         $("#eventAllParticipants").empty();
 
                         $("#nbParticipantEvent").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
-                                                
-                                                participantHtmlBox +=  "</div>"
+                                                if(canEdit == 1){
+                                                    participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                                                }
+                                                participantHtmlBox +=  "</div><br>"
                                                 
                             $("#eventAllParticipants").append(participantHtmlBox);
                         }
@@ -446,17 +523,19 @@
                         }
                         return commentHtmlBox;
                     }
-                    function createPostBox(arrayofPost){
+                    function createPostBox(arrayofPost,access){
                         $("#postContentDiv").empty();
                         $("#nbPostEvent").text(arrayofPost.length);
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroup'>" +
                                                 "<h5>"+arrayofPost[x]['name']+"</h4> "+
                                                 "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
-                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
-                                                "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
-                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
-                                                createCommentBox(arrayofPost[x]['children'])+
+                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>";
+                                                if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
+                                                    postHtmlBox+="<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
+                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>";
+                                                }
+                                                postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
                                                 "</div>"
                                                 
                             $("#postContentDiv").append(postHtmlBox);
@@ -483,7 +562,7 @@
                             $.post('../../Controller/EventController/postContent.php',{content:$("#postText").val(),type:"Text",eventID:$("#storeEventId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createPostBox(info[1]);
+                                    createPostBox(info[1],info[2]['access']);
                                 }else{
                                 }
                             });

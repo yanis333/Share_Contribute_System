@@ -301,6 +301,7 @@
 
                     function createGroupBox(triggerAction,arrayofEvent){
                         $("#group").empty();
+                        $("#group2").empty();
                         if(triggerAction === "") {
 
                         }
@@ -511,7 +512,15 @@
                             if(info[0]){
                                 $("#mainSpecificGroup").hide();
                                 $("#mainGenericGroup").show();
-                                createGroupBox("",info[1]);
+                                $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
+                                        var info = JSON.parse(data);
+                                        if(info[0]){
+                                            createGroupBox("All groups you can join or are currently in !",info[1]);
+                                            $('#searchGroupInput').val('');
+                                        }else{
+                                            
+                                        }
+                                        }); 
                                 alert('Group was successfully deleted');    
                             }else{
                                 alert("something wrong happened");

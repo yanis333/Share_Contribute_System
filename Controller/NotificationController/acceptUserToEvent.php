@@ -9,6 +9,7 @@
         $eventId = $_POST['eventId'];
 
         $result = $db->query("insert into eventparticipants(userID,eventID) values(".$userId.",".$eventId.") ");
+        $db->query("insert into accevent(userID,access,eventID) values(".$userId.",1,".$eventId.")");
         $result = $db->query("delete from eventrequest where userID = ".$userId." and eventID = ".$eventId);
 
         /*                GROUP REQUESTS                      */
