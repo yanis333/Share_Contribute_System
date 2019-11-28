@@ -24,7 +24,7 @@
                                 when e.id in (select eventID from eventrequest where userID = ".$_SESSION["usernameId"].") then 2
                                 else 0
                                 end as isRegistered
-                            from events as e where name like '%".$name."%'");
+                            from events as e where isDeleted=0 and name like '%".$name."%'");
         $allInfo = array();
         if($result){
             

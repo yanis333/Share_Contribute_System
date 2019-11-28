@@ -12,11 +12,11 @@
             $result = $db->query("select * 
                                     from groups as g 
                                     left join groupparticipants as gp on gp.groupID = g.id 
-                                    where eventID in 
+                                    where g.isDeleted=0 and eventID in 
                                         (select e.Id 
                                         from eventparticipants as ep 
                                         inner join events as e on e.Id = ep.eventID 
-                                        where ep.userid=".$idSelected.") 
+                                        where e.isDeleted=0 and ep.userid=".$idSelected.") 
                                         OR g.ID in 
                                             (select gp2.groupID 
                                             from groupparticipants as gp2 
@@ -37,7 +37,7 @@
                                     g.creationDate,
                                     g.eventID
                                     from groups as g 
-                                    where g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$idSelected.")");
+                                    where g.isDeleted=0 and g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$idSelected.")");
             $allInfo = array();
 
             if($result){

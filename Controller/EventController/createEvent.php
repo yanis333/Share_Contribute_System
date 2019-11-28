@@ -17,7 +17,7 @@ if(isset($_SESSION['username']))
             return;
         }
         $db->query("insert into events(name,managerID,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$_SESSION['usernameId']."','".$address."','".$phone."',1,'".$type."')");
-        $result = $db->query("select ID, name from events order by ID desc");
+        $result = $db->query("select ID, name from events where isDeleted=0 order by ID desc");
         if($result){
 
             while($row = $result->fetch_assoc()){

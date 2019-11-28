@@ -8,7 +8,7 @@
     if(isset($_SESSION['username'])){ 
     if($_SESSION["username"] != null){
 
-        $result = $db->query("select name from groups where ID in 
+        $result = $db->query("select name from groups where isDeleted=0 and ID in 
                             (select groupID from groupparticipants where userID=".$_SESSION['usernameId'].") ");
         
         $allInfo = array();
@@ -21,7 +21,7 @@
             $arrayInfo[1]['groupsParticipating'] = $allInfo;
         }
 
-        $result = $db->query("select name from groups where managerID=".$_SESSION['usernameId']." ");
+        $result = $db->query("select name from groups where isDeleted=0 and managerID=".$_SESSION['usernameId']." ");
         
         $allInfo = array();
 

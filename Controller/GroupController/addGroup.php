@@ -42,7 +42,7 @@
                                     g.name
                                     from groups as g 
                                     inner join events as e on e.ID = g.eventID
-                                    where e.ID =".$id." order by g.name Asc");
+                                    where g.isDeleted=0 and e.isDeleted=0 and e.ID =".$id." order by g.name Asc");
 
         $allInfo= array();
         if($result){

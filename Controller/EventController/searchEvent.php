@@ -6,7 +6,7 @@
     $arrayInfo[0] = false;
     if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
         $name = $_POST['name'];
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where name like '%".$name."%' order by name Asc");
+        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where isDeleted=0 and name like '%".$name."%' order by name Asc");
         $allInfo = array();
 
         if($result){
@@ -28,7 +28,7 @@
                                 when e.id in (select eventID from eventrequest where userID = ".$_SESSION["usernameId"].") then 2
                                 else 0
                                 end as isRegistered
-                            from events as e where name like '%".$name."%'");
+                            from events as e where isDeleted=0 and name like '%".$name."%'");
         $allInfo = array();
         if($result){
             

@@ -518,6 +518,15 @@
                                         if(info[0]){
                                             createGroupBox("All groups you can join or are currently in !",info[1]);
                                             $('#searchGroupInput').val('');
+                                            $.post('../../Controller/GroupController/getMyGroups.php',{},function(data){
+                                                var info = JSON.parse(data);
+                                                    if(info[0]){
+                                                        MyGroupBox(info[1]['myGroups']);
+                                                        ParticipatingGroupBox(info[1]['groupsParticipating']);
+                                                    }else{
+                                                        alert("something wrong happened");
+                                                    }
+                                            });
                                         }else{
                                             
                                         }
