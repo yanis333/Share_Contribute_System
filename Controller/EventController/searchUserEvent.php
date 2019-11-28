@@ -7,7 +7,7 @@
     if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
 
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events order by name Asc");
+        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where isDeleted=0 order by name Asc");
         $allInfo = array();
 
         if($result){
@@ -29,7 +29,7 @@
                                     from events as e 
                                     inner join eventparticipants as ev
                                     on ev.eventID = e.ID
-                                    where ev.userID = ".$_SESSION["usernameId"]." and e.isdeleted =0 order by e.name Asc");
+                                    where e.isDeleted=0 and ev.userID = ".$_SESSION["usernameId"]." order by e.name Asc");
             $allInfo = array();
 
             if($result){

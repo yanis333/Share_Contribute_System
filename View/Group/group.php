@@ -265,6 +265,7 @@
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant']);
                                     createPostBox(info[1]['groupPostContent']);
+                                    //this is for now only, Emile when you add access to groups delete following lines...
                                     if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
                                         $("#deleteGroupButton").show();
                                         $("#archiveGroupButton").show();

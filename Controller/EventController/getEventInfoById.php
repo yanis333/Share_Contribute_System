@@ -13,7 +13,7 @@
                                     e.ID,
                                     e.name
                                     from events as e 
-                                    where e.id =".$idSelected." order by e.name Asc");
+                                    where e.isDeleted=0 and e.id =".$idSelected." order by e.name Asc");
             $allInfo = array();
 
             if($result){
@@ -45,7 +45,7 @@
                                     g.name
                                     from groups as g 
                                     inner join events as e on e.ID = g.eventID
-                                    where e.ID =".$idSelected." order by g.name Asc");
+                                    where e.isDeleted=0 and g.isDeleted=0 and e.ID =".$idSelected." order by g.name Asc");
             $allInfo = array();
 
             if($result){
@@ -99,7 +99,7 @@
             $result = $db->query("Select 
                                     Case
                                     when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
-                                    when exists(select ID from events where ID =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    when exists(select ID from events where isDeleted=0 and ID =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
                                     else 0
                                     end as canEdit
                                     
@@ -115,7 +115,7 @@
                 $arrayInfo[1]['canEdit'] = $allInfo;
             }
 
-            $result = $db->query("select managerID from events where ID=".$idSelected);
+            $result = $db->query("select managerID from events where isDeleted=0 and ID=".$idSelected);
             $allInfo = array();
             if($result){
                 while($row = $result->fetch_assoc()){

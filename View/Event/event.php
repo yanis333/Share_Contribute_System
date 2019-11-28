@@ -660,14 +660,24 @@
                     });
 
                     $("#deleteEventButton").click(function(){
-                        /*$.post('../../Controller/EventController/deleteEvent.php',{id:$("#storeEventId").val()},function(data){
+                        $.post('../../Controller/EventController/deleteEvent.php',{id:$("#storeEventId").val()},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
+                                $("#mainSpecificEvent").hide();
+                                $("#mainGenericEvent").show();
+                                $.post('../../Controller/EventController/searchUserEvent.php',{},function(data){
+                                    var info = JSON.parse(data);
+                                    if(info[0]){
+                                        createEventBox("All Events you are registered for!",info[1]);
+                                    }else{
+                                        
+                                    }
+                                });
                                 alert("Event deleted Successfully");
                             }else{
                                 alert("You need to be an admin to create an event!");
                             }
-                        });*/
+                        });
                     });
 
                 });

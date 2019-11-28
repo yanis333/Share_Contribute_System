@@ -66,7 +66,7 @@
                                     end as isRegistered
                                 
                                     from eventparticipants as ep inner join events as e on ep.eventID = e.ID
-                                    inner join groups as g on e.ID = g.eventID
+                                    inner join groups as g on e.ID = g.eventID where g.isDeleted=0
                                     inner join users as u on u.ID = ep.userID where g.ID = ".$idSelected." group by u.ID;");
                 $allInfo = array();
     
@@ -81,7 +81,7 @@
             $result = $db->query("select 
                                     g.managerID
                                     from groups as g 
-                                    where g.ID =".$idSelected."");
+                                    where g.isDeleted=0 and g.ID =".$idSelected."");
             $allInfo = array();
 
             if($result){
