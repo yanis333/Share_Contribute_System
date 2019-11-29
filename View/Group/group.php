@@ -343,8 +343,9 @@
                         }else if(this.id.includes("participantsAccess")){
                             var idOfButtonClicked = this.id.substring(18);
 
-                            $.post('../../Controller/GroupController/getAccessUser.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                            $.post('../../Controller/GroupController/getAccessUser.php',{groupId:$("#storeGroupId").val(),userId:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
+                                console.log("INFO is "+data);
                                 if(info[0]){
                                     $("#nameParticipantAccess").val(info[1][0]['name']);
                                     $("#storeUserID").val(info[1][0]['userID']);
@@ -477,7 +478,7 @@
                     });
 
                     $("#saveAccess").click(function(){
-                        $.post('../../Controller/GroupController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),groupId:$("#storeEventId").val(),access:$("#accessSelected").val()},function(data){
+                        $.post('../../Controller/GroupController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),groupId:$("#storeGroupId").val(),access:$("#accessSelected").val()},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
                                 alert("UPDATED SUCCESSFULLY")
