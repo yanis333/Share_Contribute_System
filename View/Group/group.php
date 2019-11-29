@@ -296,6 +296,15 @@
                                 }else{
                                 }
                             });
+                        }else if(this.id.includes("groupRegister")){
+                            var idOfButtonClicked = this.id.substring(13);
+                            $.post('../../Controller/GroupController/requestToGroup.php',{groupId:idOfButtonClicked,name:$("#searchGroupInput").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createGroupBox("All Groups you searched for!",info[1]);
+                                }else{
+                                }
+                            });
                         }
                     });
 
@@ -312,12 +321,14 @@
                         
                         for(var x = 0; x<arrayofEvent.length;x++ ){
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
-                                                "<span> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
+                                                "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
-                                                    eventHtmlBox +=  "<button id= 'groupRegister' class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Register</button><br>";
-                                                }else{
+                                                    eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
+                                                }else if(arrayofEvent[x]['isRegistered'] == 1){
                                                     eventHtmlBox +=  "<button id= 'groupOpen' class='groupButton' value='"+arrayofEvent[x]['ID']+"'>Open</button><br>";
+                                                }else{
+                                                    eventHtmlBox +=  "<button  class='groupButton' disabled>Pending request</button><br>";
                                                 }
                                                 
                                                 eventHtmlBox +=  "</div>"
