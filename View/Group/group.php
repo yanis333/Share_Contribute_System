@@ -334,6 +334,7 @@
                             var idOfButtonClicked = this.id.substring(13);
                             $.post('../../Controller/GroupController/requestToGroup.php',{groupId:idOfButtonClicked,name:$("#searchGroupInput").val()},function(data){
                                 var info = JSON.parse(data);
+                                console.log("Emile is "+info[2]);
                                 if(info[0]){
                                     createGroupBox("All Groups you searched for!",info[1]);
                                 }else{
@@ -370,6 +371,7 @@
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
+                                                console.log("the event is "+arrayofEvent[x]['isRegistered']);
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1){
