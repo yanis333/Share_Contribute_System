@@ -323,6 +323,7 @@
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
+                                                console.log("the user is "+arrayofEvent[x]['isRegistered']);
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1){
@@ -444,8 +445,9 @@
 
                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                         var info = JSON.parse(data);
+                        console.log("the info we got is "+info[2]);
                             if(info[0]){
-                                createGroupBox("All groups you can join or are currently in !",info[1]);
+                                createGroupBox("All groups you can join or are currently in 2!",info[1]);
                             }else{
                                 
                             }

@@ -8,7 +8,7 @@
     if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
 
             $name = $_POST['name'];
-            $result = $db->query("select g.ID,g.name,e.name as eventName from groups as g left join events as e on e.ID=g.eventID where g.isDeleted=0 and g.name like '%".$name."%' order by g.name Asc");
+            $result = $db->query("select g.ID,g.name,e.name as eventName,Case When true then 1 end as isRegistered from groups as g left join events as e on e.ID=g.eventID where g.isDeleted=0 and g.name like '%".$name."%' order by g.name Asc");
                 
             $allInfo = array();
     

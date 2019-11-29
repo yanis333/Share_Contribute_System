@@ -7,6 +7,7 @@ $arrayInfo[0] = false;
 if(isset($_SESSION['username'])){
     $userId = $_POST['userId'];
     $groupId = $_POST['groupId'];
+    $db->query("insert into accgroup(userID,access,groupID) values(".$userId.",1,".$groupId.")");
     $result = $db->query("insert into groupparticipants(userID,groupID) values(".$userId.",".$groupId.") ");
     $result = $db->query("delete from grouprequest where userID = ".$userId." and groupID = ".$groupId);
     /*                GROUP REQUESTS                      */
