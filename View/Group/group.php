@@ -233,6 +233,40 @@
                     
                     
                 </div>
+
+             <div class="modal fade" id="accessControlModal">
+                 <div class="modal-dialog">
+
+                     <!-- Modal content-->
+                     <div class="modal-content">
+                         <div class="modal-header">
+
+                             <h4 class="modal-title">Access Player</h4>
+                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                         </div>
+                         <div class="modal-body">
+                             <span> Name :</span><br> <input type="text" id="nameParticipantAccess" disabled ><br>
+                             <input id="storeUserID" hidden></input>
+                             <span> Current Access :</span><br> <input type="text" id="currentAccessParticipants" disabled><br>
+                             <span> New Access :</span>
+                             <div id="changeAccess"><!--All Access possible-->
+                                 <select id="accessSelected">
+                                     <option value="View_Only" value> View Only </option>
+                                     <option value="View_and_Post"> View and Post </option>
+                                     <option value="View_and_Comment"> View and Comment </option>
+                                     <option value="All"> All </option>
+                                 </select>
+                             </div>
+
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" id="saveAccess" class="btn btn-default" data-dismiss="modal">Save</button>
+                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
                 <div id="postContentDiv" class="groupBoxPost">
 
                     </div>
@@ -263,8 +297,8 @@
                                     $("#mainGenericGroup").hide();
                                     $("#groupName").text(info[1]['groupheader'][0]['name']);
                                     $("#storeGroupId").val(idOfButtonClicked);
-                                    createRightAllParticipantsBox(info[1]['groupParticipant']);
-                                    createPostBox(info[1]['groupPostContent']);
+                                    createRightAllParticipantsBox(info[1]['groupParticipant'],info[1]['canEdit'][0]['canEdit']);
+                                    createPostBox(info[1]['groupPostContent'],info[1]['access']);
                                     //this is for now only, Emile when you add access to groups delete following lines...
                                     if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
                                         $("#deleteGroupButton").show();
@@ -281,7 +315,7 @@
                                 $.post('../../Controller/GroupController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),groupId:$("#storeGroupId").val()},function(data){
                                     var info = JSON.parse(data);
                                     if(info[0]){
-                                        createPostBox(info[1]['groupPostContent']);
+                                        createPostBox(info[1]['groupPostContent'],info[1]['access']);
                                     }else{
                                     }
                                 });
@@ -292,7 +326,7 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createUserBox(info[1]);
-                                    createRightAllParticipantsBox(info[2]);
+                                    createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
                                 }else{
                                 }
                             });
@@ -305,8 +339,21 @@
                                 }else{
                                 }
                             });
+                        }else if(this.id.includes("participantsAccess")){
+                            var idOfButtonClicked = this.id.substring(18);
+
+                            $.post('../../Controller/GroupController/getAccessUser.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#nameParticipantAccess").val(info[1][0]['name']);
+                                    $("#storeUserID").val(info[1][0]['userID']);
+                                    $("#currentAccessParticipants").val(info[1][0]['Type']);
+                                }
+                            });
                         }
-                    });
+
+
+                        });
 
 
                     function createGroupBox(triggerAction,arrayofEvent){
@@ -323,7 +370,6 @@
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
-                                                console.log("the user is "+arrayofEvent[x]['isRegistered']);
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1){
@@ -338,13 +384,16 @@
                         }
                     }
 
-                    function createRightAllParticipantsBox(arrayofAllParticipant){
+                    function createRightAllParticipantsBox(arrayofAllParticipant,canEdit){
                         $("#groupAllParticipants").empty();
 
                         $("#nbParticipantGroup").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
+                            if(canEdit == 1){
+                                participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                            }
                                                 
                                                 participantHtmlBox +=  "</div>"
                                                 
@@ -425,6 +474,16 @@
                         }
                     });
 
+                    $("#saveAccess").click(function(){
+                        $.post('../../Controller/GroupController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),groupId:$("#storeEventId").val(),access:$("#accessSelected").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                alert("UPDATED SUCCESSFULLY")
+                            }else{
+                            }
+                        });
+                    });
+
                     $("#backToSearchGroup").click(function(){
                         $("#mainSpecificGroup").hide();
                         $("#mainGenericGroup").show();
@@ -445,9 +504,8 @@
 
                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                         var info = JSON.parse(data);
-                        console.log("the info we got is "+info[2]);
                             if(info[0]){
-                                createGroupBox("All groups you can join or are currently in 2!",info[1]);
+                                createGroupBox("All groups you can join or are currently in!",info[1]);
                             }else{
                                 
                             }

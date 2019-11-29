@@ -42,6 +42,15 @@
         $arrayInfo[0] = true;
         $arrayInfo[1] = $allInfo;
         }
+
+        $result = $db->query("select aty.TypeRef as access from accgroup as ae inner join acctype as aty on aty.ID = ae.access where ae.groupID = ".$groupID." and ae.userID =".$_SESSION['usernameId']."");
+        $allInfo = array();
+        if($result){
+            while($row = $result->fetch_assoc()){
+                $allInfo[] = $row;
+            }
+            $arrayInfo[2]['access'] = $allInfo;
+        }
     }
     echo json_encode($arrayInfo);
 ?>

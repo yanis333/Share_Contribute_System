@@ -92,7 +92,47 @@
                 $arrayInfo[1]['groupManager'] = $allInfo;
                 $arrayInfo[1]['loggedInUserId'] = $_SESSION['usernameId'];
             }
+
+            $result = $db->query("select aty.TypeRef as access from accgroup as ae inner join acctype as aty on aty.ID = ae.access where ae.groupID = ".$idSelected." and ae.userID =".$_SESSION['usernameId']."");
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[1]['access'] = $allInfo;
             }
+
+            $result = $db->query("Select 
+                                    Case
+                                    when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
+                                    when exists(select ID from groups where isDeleted=0 and ID =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    else 0
+                                    end as canEdit
+                                    
+                                    from users
+                                    where id =".$_SESSION['usernameId']."
+                                    ");
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['canEdit'] = $allInfo;
+            }
+
+            $result = $db->query("select managerID from events where isDeleted=0 and ID=".$idSelected);
+            $allInfo = array();
+            if($result){
+                while($row = $result->fetch_assoc()){
+                    $allInfo[] = $row;
+                }
+                $arrayInfo[0] = true;
+                $arrayInfo[1]['eventManager'] = $allInfo;
+                $arrayInfo[1]['loggedInUserId'] = $_SESSION['usernameId'];
+            }
+
+        }
 
     }
     echo json_encode($arrayInfo);
