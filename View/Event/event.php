@@ -353,7 +353,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <span> Name :</span><br> <input type="text" id="nameParticipantRemove" disabled ><br>
+                        <input type="text" id="nameParticipantRemove" disabled ><br>
                         <input id="storeUserID" hidden></input>
                         </div>
 
@@ -383,10 +383,12 @@
                     });
 
                     $("#removeUser").click(function(){
-                        $.post('../../Controller/EventController/removeParticipant.php',{userID:$("#storeUserID").val()},function(data){
+                        console.log("user id is "+$("#storeEventId").val())
+                        $.post('../../Controller/EventController/removeParticipant.php',{userID:$("#storeUserID").val(),eventId:$("#storeEventId").val()},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
-                                alert("REMOVED SUCCESSFULLY")
+                                alert("REMOVED SUCCESSFULLY");
+                                createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
                             }else{
                             }
                         });
@@ -478,6 +480,7 @@
                                var info = JSON.parse(data);
                                if(info[0]){
                                    $("#nameParticipantRemove").val(info[1][0]['name']);
+                                   $("#storeUserID").val(idOfButtonClicked);
                                }else{
                                }
                            });
