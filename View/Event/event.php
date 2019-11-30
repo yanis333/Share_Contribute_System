@@ -176,6 +176,7 @@
                     border : 1px solid black;
                 }
 
+
             </style>
         </head>
         <body style="overflow-x:hidden">
@@ -341,6 +342,30 @@
                 </div>
         </div>
 
+        <div class="modal fade" id="removeUserModal">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Are you sure you want to remove the following user from the group?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <span> Name :</span><br> <input type="text" id="nameParticipantRemove" disabled ><br>
+                        <input id="storeUserID" hidden></input>
+                        </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="removeUser" class="btn btn-default" data-dismiss="modal" style="background-color: red; border : 1px solid black">YES</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
             <script>
                 $(document).ready(function() {
                     $("#mainSpecificEvent").hide();
@@ -357,7 +382,16 @@
                             });
                     });
 
-
+                    $("#removeUser").click(function(){
+                        $.post('../../Controller/EventController/removeParticipant.php',{userID:$("#storeUserID").val()},function(data){
+                            var info = JSON.parse(data);
+                            console.log("in remove user the info is "+info[0]);
+                            if(info[0]){
+                                alert("REMOVED SUCCESSFULLY")
+                            }else{
+                            }
+                        });
+                    });
 
                     $(document).on("click","button",function(){
                        if(this.id.includes("eventOpen")){
@@ -439,8 +473,17 @@
                                 }
                             });
                        }
+                       else if(this.id.includes("removeParticipants")){
+                           var idOfButtonClicked = this.id.substring(18);
 
-                    
+                           $.post('../../Controller/EventController/getUserByID.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                               var info = JSON.parse(data);
+                               if(info[0]){
+                                   $("#nameParticipantRemove").val(info[1][0]['name']);
+                               }else{
+                               }
+                           });
+                       }
                 
                     });
 
@@ -472,6 +515,7 @@
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                                                 if(canEdit == 1){
                                                     participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                                                    participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > Remove </button>";
                                                 }
                                                 participantHtmlBox +=  "</div><br>"
                                                 
