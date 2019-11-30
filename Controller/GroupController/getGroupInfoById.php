@@ -75,7 +75,7 @@
                         $allInfo[] = $row;
                     }
                     $arrayInfo[0] = true;
-                    $arrayInfo[1]['eventparticipants'] = $allInfo;
+                    $arrayInfo[1]['groupparticipants'] = $allInfo;
                 }
 
             $result = $db->query("select 

@@ -383,7 +383,6 @@
                     });
 
                     $("#removeUser").click(function(){
-                        console.log("user id is "+$("#storeEventId").val())
                         $.post('../../Controller/EventController/removeParticipant.php',{userID:$("#storeUserID").val(),eventId:$("#storeEventId").val()},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){

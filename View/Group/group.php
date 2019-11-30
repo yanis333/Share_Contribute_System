@@ -387,6 +387,7 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     $("#nameParticipantRemove").val(info[1][0]['name']);
+                                    $("#storeUserID").val(idOfButtonClicked);
                                 }else{
                                 }
                             });
@@ -523,6 +524,18 @@
                         });
                     });
 
+                    $("#removeUser").click(function(){
+                        console.log("user id is "+$("#storeGroupId").val());
+                        $.post('../../Controller/GroupController/removeParticipant.php',{userID:$("#storeUserID").val(),groupId:$("#storeGroupId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                alert("REMOVED SUCCESSFULLY");
+                                createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
+                            }else{
+                            }
+                        });
+                    });
+
                     $("#backToSearchGroup").click(function(){
                         $("#mainSpecificGroup").hide();
                         $("#mainGenericGroup").show();
@@ -585,13 +598,13 @@
                     function displayUserList(arrayofUser){
                         $("#userGroupList").empty();
                    
-                        for(var x = 0; x<arrayofUser['eventparticipants'].length;x++ ){
+                        for(var x = 0; x<arrayofUser['groupParticipant'].length;x++ ){
                             var userHtmlBox = "<div class = 'userGroup'> "+
-                                                "<span> User Name : "+arrayofUser['eventparticipants'][x]['name']+"</span>";
-                                                if(arrayofUser['eventparticipants'][x]['isRegistered'] == 1){
-                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
+                                                "<span> User Name : "+arrayofUser['groupparticipants'][x]['name']+"</span>";
+                                                if(arrayofUser['groupparticipants'][x]['isRegistered'] == 1){
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['groupparticipants'][x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
                                                 }else{
-                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton'>Add</button><br>";
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['groupparticipants'][x]['ID']+"\" class='userButton'>Add</button><br>";
                                                 }
                                                 userHtmlBox += "</div>"
 
