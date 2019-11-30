@@ -385,7 +385,6 @@
                     $("#removeUser").click(function(){
                         $.post('../../Controller/EventController/removeParticipant.php',{userID:$("#storeUserID").val()},function(data){
                             var info = JSON.parse(data);
-                            console.log("in remove user the info is "+info[0]);
                             if(info[0]){
                                 alert("REMOVED SUCCESSFULLY")
                             }else{
@@ -472,8 +471,7 @@
                                 }else{
                                 }
                             });
-                       }
-                       else if(this.id.includes("removeParticipants")){
+                       }else if(this.id.includes("removeParticipants")){
                            var idOfButtonClicked = this.id.substring(18);
 
                            $.post('../../Controller/EventController/getUserByID.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){

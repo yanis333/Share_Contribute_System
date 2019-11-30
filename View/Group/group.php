@@ -267,6 +267,30 @@
                  </div>
              </div>
 
+             <div class="modal fade" id="removeUserModal">
+                 <div class="modal-dialog">
+
+                     <!-- Modal content-->
+                     <div class="modal-content">
+                         <div class="modal-header">
+
+                             <h4 class="modal-title">Are you sure you want to remove the following user from the group?</h4>
+                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                         </div>
+                         <div class="modal-body">
+                             <span> Name :</span><br> <input type="text" id="nameParticipantRemove" disabled ><br>
+                             <input id="storeUserID" hidden></input>
+                         </div>
+
+                         <div class="modal-footer">
+                             <button type="button" id="removeUser" class="btn btn-default" data-dismiss="modal" style="background-color: red; border : 1px solid black">YES</button>
+                             <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+
                 <div id="postContentDiv" class="groupBoxPost">
 
                     </div>
@@ -339,7 +363,6 @@
                             var idOfButtonClicked = this.id.substring(13);
                             $.post('../../Controller/GroupController/requestToGroup.php',{groupId:idOfButtonClicked,name:$("#searchGroupInput").val()},function(data){
                                 var info = JSON.parse(data);
-                                console.log("Emile is "+info[2]);
                                 if(info[0]){
                                     createGroupBox("All Groups you searched for!",info[1]);
                                 }else{
@@ -350,11 +373,20 @@
 
                             $.post('../../Controller/GroupController/getAccessUser.php',{groupId:$("#storeGroupId").val(),userId:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
-                                console.log("INFO is "+data);
                                 if(info[0]){
                                     $("#nameParticipantAccess").val(info[1][0]['name']);
                                     $("#storeUserID").val(info[1][0]['userID']);
                                     $("#currentAccessParticipants").val(info[1][0]['Type']);
+                                }
+                            });
+                        }else if(this.id.includes("removeParticipants")){
+                            var idOfButtonClicked = this.id.substring(18);
+
+                            $.post('../../Controller/EventController/getUserByID.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#nameParticipantRemove").val(info[1][0]['name']);
+                                }else{
                                 }
                             });
                         }
@@ -373,12 +405,9 @@
                         }
                         
                         for(var x = 0; x<arrayofEvent.length;x++ ){
-                            console.log("SSS");
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
-
-                                                console.log("the event is "+arrayofEvent[x]['isRegistered']);
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1){
@@ -400,9 +429,9 @@
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
-                            console.log("CREATE RIGHT ACCESS IS "+canEdit);
                             if(canEdit == 1){
                                 participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                                participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > Remove </button>";
                             }
                             participantHtmlBox +=  "</div>"
                             $("#groupAllParticipants").append(participantHtmlBox);
@@ -514,7 +543,7 @@
                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                         var info = JSON.parse(data);
                             if(info[0]){
-                                createGroupBox("All groups you can join or are currently in23!",info[1]);
+                                createGroupBox("All groups you can join or are currently in!",info[1]);
                             }else{
                             }
                     });
