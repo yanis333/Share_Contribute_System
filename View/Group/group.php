@@ -227,7 +227,7 @@
                 </div>    
                 </div>
             </div>
-                <div class="groupBody">
+                <div id="postForUser" class="groupBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="groupPostText" >Post</button><button >Image</button><button >Video</button>
                     
@@ -295,15 +295,20 @@
                                 if(info[0]){
                                     $("#mainSpecificGroup").show();
                                     $("#mainGenericGroup").hide();
+                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
+                                        $("#postForUser").show();
+                                    }else{
+                                        $("#postForUser").hide();
+                                    }
                                     $("#groupName").text(info[1]['groupheader'][0]['name']);
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createPostBox(info[1]['groupPostContent'],info[1]['access']);
                                     //this is for now only, Emile when you add access to groups delete following lines...
-                                    if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
-                                        $("#deleteGroupButton").show();
-                                        $("#archiveGroupButton").show();
-                                    }
+                                    // if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
+                                    //     $("#deleteGroupButton").show();
+                                    //     $("#archiveGroupButton").show();
+                                    // }
                                 }
                             });
                         }else if(this.id.includes("commentPostIdButton")){
@@ -362,16 +367,17 @@
                         $("#group").empty();
                         $("#group2").empty();
                         if(triggerAction === "") {
-
                         }
                         else {
                             $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
                         }
                         
                         for(var x = 0; x<arrayofEvent.length;x++ ){
+                            console.log("SSS");
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
                                                 "<span> Event Name : "+arrayofEvent[x]['eventName']+"</span>";
+
                                                 console.log("the event is "+arrayofEvent[x]['isRegistered']);
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"groupRegister"+arrayofEvent[x]['ID']+"\" class='groupButton' value='"+arrayofEvent[x]['ID']+"' >Request Access</button><br>";
@@ -394,12 +400,11 @@
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
+                            console.log("CREATE RIGHT ACCESS IS "+canEdit);
                             if(canEdit == 1){
                                 participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
                             }
-                                                
-                                                participantHtmlBox +=  "</div>"
-                                                
+                            participantHtmlBox +=  "</div>"
                             $("#groupAllParticipants").append(participantHtmlBox);
                         }
                     }
@@ -430,19 +435,20 @@
                         }
                     }
 
-                    function createPostBox(arrayofPost){
+                    function createPostBox(arrayofPost, access){
                         $("#postContentDiv").empty();
                         $("#nbPostGroup").text(arrayofPost.length);
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroupPost'>" +
                                                 "<h5>"+arrayofPost[x]['name']+"</h4> "+
                                                 "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
-                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
-                                                "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
-                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
-                                                createCommentBox(arrayofPost[x]['children'])+
-                                                "</div>"
-                                                
+                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>";
+                                                if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
+                                                    postHtmlBox+="<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
+                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>";
+                            }
+                            postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
+                                "</div>"
                             $("#postContentDiv").append(postHtmlBox);
                         }
                     }
@@ -508,9 +514,8 @@
                     $.post('../../Controller/GroupController/searchUserGroup.php',{},function(data){
                         var info = JSON.parse(data);
                             if(info[0]){
-                                createGroupBox("All groups you can join or are currently in!",info[1]);
+                                createGroupBox("All groups you can join or are currently in23!",info[1]);
                             }else{
-                                
                             }
                     });
 
@@ -529,7 +534,7 @@
                             $.post('../../Controller/GroupController/postContent.php',{content:$("#postText").val(),type:"Text",groupID:$("#storeGroupId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createPostBox(info[1]);
+                                    createPostBox(info[1],info[2]['access']);
                                 }else{
                                 }
                             });
