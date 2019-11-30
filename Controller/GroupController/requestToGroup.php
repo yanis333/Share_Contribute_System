@@ -1,10 +1,25 @@
 <?php
+
 include('../../Model/Config/db_server.php');
+require_once '../../vendor/autoload.php';
+
 session_start();
 $db = new DB();
 $arrayInfo = array();
 $allInfo= array();
 $arrayInfo[0] = false;
+
+
+
+$transport = (new Swift_SmtpTransport('smtp.gmail.com', 587,'tls'))
+  ->setUsername('sharecontributesystem@gmail.com')
+  ->setPassword('password1!#')
+;
+
+// Create the Mailer using your created Transport
+$mailer = new Swift_Mailer($transport);
+
+
 if(isset($_SESSION['username']))
     if($_SESSION["username"] != null){
         $groupId = $_POST['groupId'];
@@ -62,8 +77,37 @@ if(isset($_SESSION['username']))
             }
             $arrayInfo[0] = true;
             $arrayInfo[1] = $allInfo;
+           
         }
 
+        $result = $db->query("select u.name as username,u.email, g.name as groupname 
+        from groups as g left join  users as u on u.ID = g.managerID where g.id= (select id from groups where id='".$groupId."')");
+
+        if($result){
+            $row = $result->fetch_assoc();
+           
+        $body = ' 
+        <html> 
+        <body> 
+            <h1>Group request alert!</h1> 
+            <p>Hello '.$row['username'].' , you are receving this message because a user is currently requesting to enter the group called : '.$row['groupname'].'<br />
+            Please connect into the portal to accept or refuse the request</p>
+                <a href="https://mrc353.encs.concordia.ca/">Share Contribute System</a>
+                
+            </table> 
+        </body> 
+        </html>'; 
+
+            $message = (new Swift_Message('Group Request for '.$row['groupname']))
+            ->setFrom(['sharecontributesystem@gmail.com' => 'Share Contribute System'])
+            ->setTo(['skander96@hotmail.com'])
+            ->setBody($body)
+                            ;
+            // Send the message
+           $message->setContentType("text/html");
+           $resultMail = $mailer->send($message);
+        } 
+     
 
     }
 echo json_encode($arrayInfo);

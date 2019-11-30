@@ -335,8 +335,10 @@
                             $.post('../../Controller/GroupController/requestToGroup.php',{groupId:idOfButtonClicked,name:$("#searchGroupInput").val()},function(data){
                                 var info = JSON.parse(data);
                                 console.log("Emile is "+info[2]);
+                             
                                 if(info[0]){
                                     createGroupBox("All Groups you searched for!",info[1]);
+                           
                                 }else{
                                 }
                             });
