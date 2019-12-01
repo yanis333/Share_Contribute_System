@@ -19,9 +19,9 @@ if(isset($_SESSION['username']))
         $db->query("insert into events(name,managerID,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$_SESSION['usernameId']."','".$address."','".$phone."',1,'".$type."')");
         $result2 = $db->getLastInsertedId();
         if($result2){
-                mkdir("../Files/Events/".$result2, 0700);
+                mkdir("../../Files/Events/".$result2, 0700);
         }
-
+        $db->query("insert into accevent values(".$_SESSION['usernameId'].",(select ID from acctype where Type = 'All'),".$result2." );");
         $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where isDeleted=0 order by ID desc");
         if($result){
 
