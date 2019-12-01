@@ -596,6 +596,7 @@
                     }
                     function createPostBox(arrayofPost,access){
                         $("#postContentDiv").empty();
+                        var images =0;
                         $("#nbPostEvent").text(arrayofPost.length);
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroup'>" +
@@ -605,6 +606,7 @@
                                                     postHtmlBox+="<h4>"+arrayofPost[x]['content']+"</h4><br>";
                                                 }
                                                 if(arrayofPost[x]['type'] == 'Image'){
+                                                    images++;
                                                     postHtmlBox+="<img src=\""+arrayofPost[x]['pathOfFile']+"\" alt=\"Image\" width=\"100%\" height=\"500\"><br>";
                                                 }
                                                 if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
@@ -616,6 +618,7 @@
                                                 
                             $("#postContentDiv").append(postHtmlBox);
                         }
+                        $("#nbImageEvent").text(images);
                     }
                     function displayUserList(arrayofUser){
                         $("#userEventList").empty();
