@@ -4,13 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9fbba76942307f20f314cec3cbdc94da
+class ComposerStaticInit8831dfc005df8e53f6e7be122ccb372a
 {
     public static $files = array (
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -22,6 +26,10 @@ class ComposerStaticInit9fbba76942307f20f314cec3cbdc94da
     );
 
     public static $prefixDirsPsr4 = array (
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
@@ -32,11 +40,22 @@ class ComposerStaticInit9fbba76942307f20f314cec3cbdc94da
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PayPal' => 
+            array (
+                0 => __DIR__ . '/..' . '/paypal/rest-api-sdk-php/lib',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9fbba76942307f20f314cec3cbdc94da::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9fbba76942307f20f314cec3cbdc94da::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8831dfc005df8e53f6e7be122ccb372a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8831dfc005df8e53f6e7be122ccb372a::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8831dfc005df8e53f6e7be122ccb372a::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

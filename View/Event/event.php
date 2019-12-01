@@ -483,6 +483,7 @@
                             });
                        }else if(this.id.includes("eventRegister")){
                         var idOfButtonClicked = this.id.substring(13);
+                            // window.location.href= "http://sharecontributesystem/View/PayPal/";
                             $.post('../../Controller/EventController/RequestToEvent.php',{eventId:idOfButtonClicked,name:$("#searchEventInput").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){

@@ -54,6 +54,7 @@
 
                 #mySidenav a:hover,#userLogout:hover{
                 color: #f1f1f1;
+                cursor:pointer;
                 }
 
                 .notif {
@@ -93,7 +94,7 @@
         <a href="../User/user.php">Users</a>
         <a href="../Group/group.php">Groups</a>
         <a href="../Event/event.php">Events</a>
-        <a  href="../Notification/notification.php"><span id ="notif">Notifications</span></a>
+        <a href="../Notification/notification.php"><span id ="notif">Notifications</span></a>
         <p id="userLogout" >Logout</p>
         </div>
 
