@@ -75,7 +75,7 @@
                         $allInfo[] = $row;
                     }
                     $arrayInfo[0] = true;
-                    $arrayInfo[1]['eventparticipants'] = $allInfo;
+                    $arrayInfo[1]['groupparticipants'] = $allInfo;
                 }
 
             $result = $db->query("select 
@@ -104,8 +104,7 @@
 
             $result = $db->query("Select 
                                     Case
-                                    when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
-                                    when exists(select ID from groups where isDeleted=0 and ID =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    when exists(select id from groups where isDeleted=0 and id =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
                                     else 0
                                     end as canEdit
                                     

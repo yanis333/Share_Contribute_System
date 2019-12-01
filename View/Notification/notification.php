@@ -60,12 +60,10 @@
 
                     $(document).on("click","button",function(){
                        if(this.id.includes("accepteGroupUserId")){
-                           console.log("IM IN")
                            var idOfButtonClicked = this.id.substring(18);
 
                            $.post('../../Controller/NotificationController/acceptUserToGroup.php',{userId:groupNotif[idOfButtonClicked]['userID'],groupId:groupNotif[idOfButtonClicked]['groupID']},function(data){
                                 var info = JSON.parse(data);
-                                console.log("")
                                 if(info[0]){
                                     groupNotif = info[1];
                                     eventNotif = info[2];

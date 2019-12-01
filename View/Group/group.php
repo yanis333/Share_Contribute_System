@@ -227,7 +227,7 @@
                 </div>    
                 </div>
             </div>
-                <div class="groupBody">
+                <div id="postForUser" class="groupBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
                     <button id="groupPostText" >Post</button><button >Image</button><button >Video</button>
                     
@@ -267,6 +267,30 @@
                  </div>
              </div>
 
+             <div class="modal fade" id="removeUserModal">
+                 <div class="modal-dialog">
+
+                     <!-- Modal content-->
+                     <div class="modal-content">
+                         <div class="modal-header">
+
+                             <h4 class="modal-title">Are you sure you want to remove the following user from the group?</h4>
+                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                         </div>
+                         <div class="modal-body">
+                             <span> Name :</span><br> <input type="text" id="nameParticipantRemove" disabled ><br>
+                             <input id="storeUserID" hidden></input>
+                         </div>
+
+                         <div class="modal-footer">
+                             <button type="button" id="removeUser" class="btn btn-default" data-dismiss="modal" style="background-color: red; border : 1px solid black">YES</button>
+                             <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+
                 <div id="postContentDiv" class="groupBoxPost">
 
                     </div>
@@ -295,15 +319,20 @@
                                 if(info[0]){
                                     $("#mainSpecificGroup").show();
                                     $("#mainGenericGroup").hide();
+                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
+                                        $("#postForUser").show();
+                                    }else{
+                                        $("#postForUser").hide();
+                                    }
                                     $("#groupName").text(info[1]['groupheader'][0]['name']);
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createPostBox(info[1]['groupPostContent'],info[1]['access']);
                                     //this is for now only, Emile when you add access to groups delete following lines...
-                                    if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
-                                        $("#deleteGroupButton").show();
-                                        $("#archiveGroupButton").show();
-                                    }
+                                    // if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
+                                    //     $("#deleteGroupButton").show();
+                                    //     $("#archiveGroupButton").show();
+                                    // }
                                 }
                             });
                         }else if(this.id.includes("commentPostIdButton")){
@@ -336,18 +365,30 @@
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     createGroupBox("All Groups you searched for!",info[1]);
+                           
                                 }else{
                                 }
                             });
                         }else if(this.id.includes("participantsAccess")){
                             var idOfButtonClicked = this.id.substring(18);
 
-                            $.post('../../Controller/GroupController/getAccessUser.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                            $.post('../../Controller/GroupController/getAccessUser.php',{groupId:$("#storeGroupId").val(),userId:idOfButtonClicked},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     $("#nameParticipantAccess").val(info[1][0]['name']);
                                     $("#storeUserID").val(info[1][0]['userID']);
                                     $("#currentAccessParticipants").val(info[1][0]['Type']);
+                                }
+                            });
+                        }else if(this.id.includes("removeParticipants")){
+                            var idOfButtonClicked = this.id.substring(18);
+
+                            $.post('../../Controller/EventController/getUserByID.php',{eventId:$("#storeEventId").val(),userId:idOfButtonClicked},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#nameParticipantRemove").val(info[1][0]['name']);
+                                    $("#storeUserID").val(idOfButtonClicked);
+                                }else{
                                 }
                             });
                         }
@@ -360,7 +401,6 @@
                         $("#group").empty();
                         $("#group2").empty();
                         if(triggerAction === "") {
-
                         }
                         else {
                             $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
@@ -393,10 +433,9 @@
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                             if(canEdit == 1){
                                 participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
+                                participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > Remove </button>";
                             }
-                                                
-                                                participantHtmlBox +=  "</div>"
-                                                
+                            participantHtmlBox +=  "</div>"
                             $("#groupAllParticipants").append(participantHtmlBox);
                         }
                     }
@@ -427,19 +466,20 @@
                         }
                     }
 
-                    function createPostBox(arrayofPost){
+                    function createPostBox(arrayofPost, access){
                         $("#postContentDiv").empty();
                         $("#nbPostGroup").text(arrayofPost.length);
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroupPost'>" +
                                                 "<h5>"+arrayofPost[x]['name']+"</h4> "+
                                                 "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
-                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>"+
-                                                "<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
-                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>"+
-                                                createCommentBox(arrayofPost[x]['children'])+
-                                                "</div>"
-                                                
+                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>";
+                                                if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
+                                                    postHtmlBox+="<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
+                                                "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>";
+                            }
+                            postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
+                                "</div>"
                             $("#postContentDiv").append(postHtmlBox);
                         }
                     }
@@ -475,10 +515,22 @@
                     });
 
                     $("#saveAccess").click(function(){
-                        $.post('../../Controller/GroupController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),groupId:$("#storeEventId").val(),access:$("#accessSelected").val()},function(data){
+                        $.post('../../Controller/GroupController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),groupId:$("#storeGroupId").val(),access:$("#accessSelected").val()},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
                                 alert("UPDATED SUCCESSFULLY")
+                            }else{
+                            }
+                        });
+                    });
+
+                    $("#removeUser").click(function(){
+                        console.log("user id is "+$("#storeGroupId").val());
+                        $.post('../../Controller/GroupController/removeParticipant.php',{userID:$("#storeUserID").val(),groupId:$("#storeGroupId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                alert("REMOVED SUCCESSFULLY");
+                                createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
                             }else{
                             }
                         });
@@ -507,7 +559,6 @@
                             if(info[0]){
                                 createGroupBox("All groups you can join or are currently in!",info[1]);
                             }else{
-                                
                             }
                     });
 
@@ -526,7 +577,7 @@
                             $.post('../../Controller/GroupController/postContent.php',{content:$("#postText").val(),type:"Text",groupID:$("#storeGroupId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createPostBox(info[1]);
+                                    createPostBox(info[1],info[2]['access']);
                                 }else{
                                 }
                             });
@@ -547,13 +598,13 @@
                     function displayUserList(arrayofUser){
                         $("#userGroupList").empty();
                    
-                        for(var x = 0; x<arrayofUser['eventparticipants'].length;x++ ){
+                        for(var x = 0; x<arrayofUser['groupParticipant'].length;x++ ){
                             var userHtmlBox = "<div class = 'userGroup'> "+
-                                                "<span> User Name : "+arrayofUser['eventparticipants'][x]['name']+"</span>";
-                                                if(arrayofUser['eventparticipants'][x]['isRegistered'] == 1){
-                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
+                                                "<span> User Name : "+arrayofUser['groupparticipants'][x]['name']+"</span>";
+                                                if(arrayofUser['groupparticipants'][x]['isRegistered'] == 1){
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['groupparticipants'][x]['ID']+"\" class='userButton' style =\"background-color:green\" disabled>Registered</button><br>";
                                                 }else{
-                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['eventparticipants'][x]['ID']+"\" class='userButton'>Add</button><br>";
+                                                    userHtmlBox +=  "<button id= \"addUserId"+arrayofUser['groupparticipants'][x]['ID']+"\" class='userButton'>Add</button><br>";
                                                 }
                                                 userHtmlBox += "</div>"
 
