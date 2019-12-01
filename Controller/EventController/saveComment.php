@@ -17,8 +17,10 @@
         }
         $db->query("insert into commentpostevent(userID,postID,comment,date) values(".$_SESSION['usernameId'].",".$id.",'".$comment."',NOW())");
 
-        $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postevent as p  inner join posttexttoevent as pt on pt.postID = p.ID
-                                    inner join users as u on u.id = p.userID where pt.eventID = ".$eventID." order by p.date desc");
+        $result = $db->query("
+        select pe.ID,u.name,pe.type,pe.date,pt.content,pet.pathOfFile  from postevent as pe left join  posttexttoevent as pt on pt.postID = pe.Id 
+                    left join postelementtoevent as pet on pet.postID = pe.ID 
+                    inner join users as u on u.id = pe.userID where pet.eventID = ".$eventID." or pt.eventID = ".$eventID." order by pe.date desc");
         
             $allInfo = array();
             

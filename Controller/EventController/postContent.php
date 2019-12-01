@@ -26,8 +26,10 @@
             }
         $db->query("insert into posttexttoevent(eventID,content,postID)values(".$eventID.",'".$content."', ".$postInserted[0]['ID'].")");  
         
-        $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postevent as p  inner join posttexttoevent as pt on pt.postID = p.ID
-                                inner join users as u on u.id = p.userID where pt.eventID = ".$eventID." order by p.date desc");
+        $result = $db->query("
+        select pe.ID,u.name,pe.type,pe.date,pt.content,pet.pathOfFile  from postevent as pe left join  posttexttoevent as pt on pt.postID = pe.Id 
+                    left join postelementtoevent as pet on pet.postID = pe.ID 
+                    inner join users as u on u.id = pe.userID where pet.eventID = ".$eventID." or pt.eventID = ".$eventID." order by pe.date desc");
         if($result){
             while($row = $result->fetch_assoc()){
                 $allCommentInfo = array();
