@@ -30,15 +30,3 @@ class DB{
 
 
 ?>
-
-create table eventpaid(
-    id int primary key,
-    userID int not null,
-    eventID int not null,
-    amount nvarchar(10),
-    date datetime default CURRENT_TIMESTAMP
-);
-alter table eventpaid add constraint fk_eventpaid_userID FOREIGN KEY(userID)
-references users(id);
-alter table eventpaid add constraint fk_eventpaid_eventID FOREIGN KEY(eventID)
-references events(ID);
