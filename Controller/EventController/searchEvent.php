@@ -19,15 +19,22 @@
     }
     else if(isset($_SESSION['username'])){
         $name = $_POST['name'];
+        $userID = $_SESSION["usernameId"];
         
         $result = $db->query("select 
                             e.id as ID,
                             e.name as name,
                             case
-                                when e.id in (select eventID from eventparticipants where userID = ".$_SESSION['usernameId'].") then 1 
-                                when e.id in (select eventID from eventrequest where userID = ".$_SESSION["usernameId"].") then 2
+                                when e.id in (select eventID from eventparticipants where userID = ${userID}) then 1 
+                                when e.id in (select eventID from eventrequest where userID = ${userID}) then 2
                                 else 0
-                                end as isRegistered
+                                end as isRegistered,
+                            case 
+                                when e.id in (select ep.eventID from eventpaid ep 
+                                    where ep.eventID = e.id AND ep.userID = ${userID} AND ep.status = 'approved') 
+                                then 1
+                                else 0
+                            end as paid
                             from events as e where isDeleted=0 and name like '%".$name."%'");
         $allInfo = array();
         if($result){

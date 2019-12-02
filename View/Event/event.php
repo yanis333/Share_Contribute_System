@@ -457,6 +457,25 @@
                                     createPostBox(info[1]['eventPostContent'],info[1]['access']);
                                 }
                             });
+                       }else if(this.id.includes("completePayment")){
+                           var idOfButtonClicked = this.id.substring(15);
+                           //redirect to request
+                        //    location.replace()
+                        //    $.post('../../Controller/PayPalController/request.php',{eventID:idOfButtonClicked});
+                            var form_data = new FormData();
+                            // form_data.append("file", file_data);
+                            form_data.append("eventID", idOfButtonClicked);
+                           $.ajax({
+                                url: "../../Controller/PayPalController/request.php",
+                                data: { eventID: idOfButtonClicked },              
+                                method: 'post',
+                                success: function(data){
+                                    console.log(data);
+                                }
+                            });
+                        //    ,function(data){
+                        //         var info = JSON.parse(data);){
+                       
                        }else if(this.id.includes("commentPostIdButton")){
                         var idOfButtonClicked = this.id.substring(19);
                         if($("commentPostId"+idOfButtonClicked).val() != ""){
@@ -483,7 +502,6 @@
                             });
                        }else if(this.id.includes("eventRegister")){
                         var idOfButtonClicked = this.id.substring(13);
-                            // window.location.href= "http://sharecontributesystem/View/PayPal/";
                             $.post('../../Controller/EventController/RequestToEvent.php',{eventId:idOfButtonClicked,name:$("#searchEventInput").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
@@ -526,7 +544,12 @@
                                                 "<span> Event Name : "+arrayofEvent[x]['name']+"</span>";
                                                 if(arrayofEvent[x]['isRegistered'] == 0){
                                                     eventHtmlBox +=  "<button id= \"eventRegister"+arrayofEvent[x]['ID']+"\" class='eventButton'  >Request</button><br>";
-                                                }else if(arrayofEvent[x]['isRegistered'] == 1){
+                                                }else if(arrayofEvent[x]['isRegistered'] == 1 && arrayofEvent[x]['paid'] == 0){
+                                                    // eventHtmlBox +=  "<button id= \"completePayment"+arrayofEvent[x]['ID']+"\" class='eventButton'>Complete payment</button><br>";
+                                                    eventHtmlBox += "<form action='../../Controller/PayPalController/request.php' method='post' id='paypal_form'>" +
+                                                    "<input type='hidden' name='eventID' value='" + arrayofEvent[x]['ID'] + "'/>" +
+                                                    "<input class='eventButton' type='submit' name='submit' value='Complete Payment'/></form>";
+                                                }else if(arrayofEvent[x]['isRegistered'] == 1 && arrayofEvent[x]['paid'] == 1){
                                                     eventHtmlBox +=  "<button id= \"eventOpen"+arrayofEvent[x]['ID']+"\" class='eventButton'>Open</button><br>";
                                                 }else{
                                                     eventHtmlBox +=  "<button  class='eventButton' disabled>Pending request</button><br>";

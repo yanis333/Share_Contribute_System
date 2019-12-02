@@ -1,6 +1,8 @@
 <?php
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
@@ -14,7 +16,7 @@ $paypalConfig = [
     'client_id' => 'AVR0IBXQxIfhSXLwbNLFxNxSEUufo3_MUzRFXuUtVtmCCpeQ-29QxNVUkFBV4srIj1RMb-GFsP5koWW3',
     'client_secret' => 'EDFihXY0Nhs90O9g64-bif30gc-8fcMMngOHMxLPD3oKTS5Z5Num8icX4eo-nDgiWVyp9PkOfJi-KbJU',
     'return_url' => 'http://sharecontributesystem/View/PayPal/response.php',
-    'cancel_url' => 'http://sharecontributesystem/View/PayPal/payment-cancelled.html'
+    'cancel_url' => 'http://sharecontributesystem/View/PayPal/payment-cancelled.php'
 ];
 // Database settings. Change these for your database configuration.
 $dbConfig = [

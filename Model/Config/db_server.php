@@ -18,7 +18,7 @@ class DB{
     }
 
     public function prepare($txt){
-        return $this->prepare($txt);
+        return $this->db->prepare($txt);
     }
     public function close(){
         $this->db->close();

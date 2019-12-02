@@ -1,9 +1,17 @@
 <?php
+
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 require '..\..\Controller\PayPalController\bootstrap.php';
-if (empty($_GET['paymentId']) || empty($_GET['PayerID'])) {
-    throw new Exception('The response is missing the paymentId and PayerID');
+include '..\..\Controller\PayPalController\PayPal.php';
+
+if (empty($_GET['paymentId']) || empty($_GET['PayerID']) || empty($_SESSION['usernameId'])) {
+    throw new Exception('The response is missing the paymentId and PayerID and valid user session');
 }
 $paymentId = $_GET['paymentId'];
 $payment = Payment::get($paymentId, $apiContext);
@@ -13,50 +21,22 @@ try {
     // Take the payment
     $payment->execute($execution, $apiContext);
     try {
-        $db = new mysqli($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
+        $paypal = new PayPal();
         $payment = Payment::get($paymentId, $apiContext);
-        $data = [
-            'transaction_id' => $payment->getId(),
-            'payment_amount' => $payment->transactions[0]->amount->total,
-            'payment_status' => $payment->getState(),
-            'invoice_id' => $payment->transactions[0]->invoice_number
-        ];
-        if (addPayment($data) !== false && $data['payment_status'] === 'approved') {
+        $response = $paypal->insertPaidEvent($_SESSION['usernameId'], $_SESSION['eventID'], $payment->transactions[0]->amount->total, $payment->getId(), 
+            $payment->getState(), $payment->transactions[0]->invoice_number);
+        if ($response && $payment->getState() === 'approved') {
             // Payment successfully added, redirect to the payment complete page.
-            header('location:payment-successful.html');
+            header('location:payment-successful.php');
             exit(1);
         } else {
-            // Payment failed
+            header('location:payment-cancelled.php');
         }
     } catch (Exception $e) {
+        echo "Failed to retrieve payment from paypal";
         // Failed to retrieve payment from PayPal
     }
 } catch (Exception $e) {
     // Failed to take payment
-}
-/**
- * Add payment to database
- *
- * @param array $data Payment data
- * @return int|bool ID of new payment or false if failed
- */
-function addPayment($data)
-{
-    // global $db;
-    // if (is_array($data)) {
-    //     $stmt = $db->prepare('INSERT INTO `payments` (transaction_id, payment_amount, payment_status, invoice_id, createdtime) VALUES(?, ?, ?, ?, ?)');
-    //     $stmt->bind_param(
-    //         'sdsss',
-    //         $data['transaction_id'],
-    //         $data['payment_amount'],
-    //         $data['payment_status'],
-    //         $data['invoice_id'],
-    //         date('Y-m-d H:i:s')
-    //     );
-    //     $stmt->execute();
-    //     $stmt->close();
-    //     return $db->insert_id;
-    // }
-    // return false;
-    return true;
+    echo "Failed to take payment from paypal";
 }
