@@ -319,11 +319,12 @@
                                 if(info[0]){
                                     $("#mainSpecificGroup").show();
                                     $("#mainGenericGroup").hide();
-                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
+                                    if(!((info[1]['access'] === undefined || info[1]['access'].length == 0))){ 
+                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post"  ){
                                         $("#postForUser").show();
                                     }else{
                                         $("#postForUser").hide();
-                                    }
+                                    }}
                                     $("#groupName").text(info[1]['groupheader'][0]['name']);
                                     $("#storeGroupId").val(idOfButtonClicked);
                                     createRightAllParticipantsBox(info[1]['groupParticipant'],info[1]['canEdit'][0]['canEdit']);
@@ -598,7 +599,7 @@
                     function displayUserList(arrayofUser){
                         $("#userGroupList").empty();
                    
-                        for(var x = 0; x<arrayofUser['groupParticipant'].length;x++ ){
+                        for(var x = 0; x<arrayofUser['groupparticipants'].length;x++ ){
                             var userHtmlBox = "<div class = 'userGroup'> "+
                                                 "<span> User Name : "+arrayofUser['groupparticipants'][x]['name']+"</span>";
                                                 if(arrayofUser['groupparticipants'][x]['isRegistered'] == 1){

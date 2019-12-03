@@ -65,9 +65,11 @@
                                         else 0
                                     end as isRegistered
                                 
-                                    from eventparticipants as ep inner join events as e on ep.eventID = e.ID
-                                    inner join groups as g on e.ID = g.eventID where g.isDeleted=0
-                                    inner join users as u on u.ID = ep.userID where g.ID = ".$idSelected." group by u.ID;");
+                                    from eventparticipants as ep 
+                                    inner join events as e on ep.eventID = e.ID
+                                    inner join groups as g on e.ID = g.eventID 
+                                    inner join users as u on u.ID = ep.userID where g.isDeleted=0 AND g.ID = ".$idSelected." group by u.ID
+                                    ");
                 $allInfo = array();
     
                 if($result){
