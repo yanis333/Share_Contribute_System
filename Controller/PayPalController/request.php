@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $eventInfo = $paypal->getEventInfo($eventID);
 
     if($eventInfo[0])
-        $eventInfo = $eventInfo[1][0];
+        $eventInfo = $eventInfo[0];
     
     $invoiceNumber = uniqid();
     $amount = new Amount();
@@ -39,7 +39,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         ->setTotal($amountPayable);
     $transaction = new Transaction();
     $transaction->setAmount($amount)
-        ->setDescription($eventInfo[0]["description"])
+        ->setDescription($eventInfo["name"])
         ->setInvoiceNumber($invoiceNumber);
     $redirectUrls = new RedirectUrls();
     $redirectUrls->setReturnUrl($paypalConfig['return_url'])

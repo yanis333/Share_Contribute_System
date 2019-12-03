@@ -11,7 +11,7 @@ require '..\..\Controller\PayPalController\bootstrap.php';
 include '..\..\Controller\PayPalController\PayPal.php';
 
 if (empty($_GET['paymentId']) || empty($_GET['PayerID']) || empty($_SESSION['usernameId'])) {
-    throw new Exception('The response is missing the paymentId and PayerID and valid user session');
+    header('location:payment-cancelled.php');
 }
 $paymentId = $_GET['paymentId'];
 $payment = Payment::get($paymentId, $apiContext);
