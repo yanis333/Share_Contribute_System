@@ -95,7 +95,15 @@
                 $arrayInfo[1]['loggedInUserId'] = $_SESSION['usernameId'];
             }
 
-            $result = $db->query("select aty.TypeRef as access from accgroup as ae inner join acctype as aty on aty.ID = ae.access where ae.groupID = ".$idSelected." and ae.userID =".$_SESSION['usernameId']."");
+            $result = $db->query("select 
+                                    CASE 
+                                    when (u.isAdmin = 1) then 'All'
+                                    when (u.isAdmin = 0 and u.id in (select userID from accgroup where groupID = ".$idSelected.")) then (select TypeRef from acctype where ID = ae.access)
+                                    end as access
+                                    from users as u
+                                    left join accgroup as ae on u.id= ae.userID
+                                    left join acctype as aty on aty.ID = ae.access 
+                                    where (u.isAdmin = 1 or ae.groupID =".$idSelected.") and u.id =".$_SESSION['usernameId']);
             $allInfo = array();
             if($result){
                 while($row = $result->fetch_assoc()){
