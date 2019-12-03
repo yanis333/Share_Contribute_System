@@ -14,12 +14,18 @@
         <?php include("../Dashboard/navbar.php") ?>
         <div id="main">
         <span style="font-size:30px;cursor:pointer" id="openNav">&#9776; Menu</span>
+            <h3>Welcome <span id="username" style="color: red"> </span> to Share Contribute System</h3>
         </div>
 
             <script>
                 $(document).ready(function() {
-                   
 
+                    $.post('../../Controller/UserController/getCurrentUserInformation.php',{},function(data) {
+                        var info = JSON.parse(data);
+                        if (info[0]) {
+                            $('#username').text(info[1]['name']);
+                        }
+                    });
                 });
             </script>
         </body>
