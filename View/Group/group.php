@@ -330,10 +330,10 @@
                                     createRightAllParticipantsBox(info[1]['groupParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createPostBox(info[1]['groupPostContent'],info[1]['access']);
                                     //this is for now only, Emile when you add access to groups delete following lines...
-                                    // if(info[1]['groupManager'][0]['managerID'] === info[1]['loggedInUserId']) {
-                                    //     $("#deleteGroupButton").show();
-                                    //     $("#archiveGroupButton").show();
-                                    // }
+                                     if(info[1]['canEdit'][0]['canEdit'] == 1) {
+                                         $("#deleteGroupButton").show();
+                                         $("#archiveGroupButton").show();
+                                     }
                                 }
                             });
                         }else if(this.id.includes("commentPostIdButton")){
@@ -433,8 +433,9 @@
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                             if(canEdit == 1){
+                                participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > - </button>";
                                 participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
-                                participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > Remove </button>";
+                                
                             }
                             participantHtmlBox +=  "</div>"
                             $("#groupAllParticipants").append(participantHtmlBox);

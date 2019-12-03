@@ -82,7 +82,7 @@
                     margin-top :2%;
                     border-radius: 5px;
                     background-color: #f2f2f2;
-                    width: 95%;
+                    width: 100%;
                 }
 
                 .eventButton, .userButton{
@@ -568,8 +568,9 @@
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayofAllParticipant[x]['name']+"</span>";
                                                 if(canEdit == 1){
+                                                    participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > - </button>";
                                                     participantHtmlBox+= "<button id=\"participantsAccess"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right\" data-toggle=\"modal\" data-target=\"#accessControlModal\"> Edit </button>";
-                                                    participantHtmlBox+= "<button id=\"removeParticipants"+arrayofAllParticipant[x]['userID']+"\" style=\"float:right; background-color: red\" data-toggle=\"modal\" data-target=\"#removeUserModal\" > Remove </button>";
+                                                    
                                                 }
                                                 participantHtmlBox +=  "</div><br>"
                                                 

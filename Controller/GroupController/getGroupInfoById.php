@@ -114,7 +114,7 @@
 
             $result = $db->query("Select 
                                     Case
-                                    when exists(select id from groups where isDeleted=0 and id =".$idSelected." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    when exists(select id from groups where isDeleted=0 and id =".$idSelected." and managerID = ".$_SESSION['usernameId'].") or isAdmin = 1 then 1
                                     else 0
                                     end as canEdit
                                     
