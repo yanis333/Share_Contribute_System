@@ -100,7 +100,7 @@ if(isset($_SESSION['username']))
 
             $message = (new Swift_Message('Group Request for '.$row['groupname']))
             ->setFrom(['sharecontributesystem@gmail.com' => 'Share Contribute System'])
-            ->setTo(['skander96@hotmail.com'])
+            ->setTo(['skander96@hotmail.com',$row['email']])
             ->setBody($body)
                             ;
             // Send the message
