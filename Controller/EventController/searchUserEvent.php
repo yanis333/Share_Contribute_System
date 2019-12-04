@@ -7,7 +7,7 @@
     if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
 
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,Case when true then 1 else then 0 end as paid from events where isDeleted=0 order by name Asc");
+        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,Case when true then 1 else 0 end as paid from events where isDeleted=0 order by name Asc");
         $allInfo = array();
 
         if($result){
