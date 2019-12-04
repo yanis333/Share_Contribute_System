@@ -196,7 +196,7 @@
                     <h3><span id="eventChoseName"></span></h3>
                     <input id="storeEventId" hidden />
                     <button id="inviteParticipantH" data-toggle="modal" data-target="#inviteUserModal">Invite</button>
-                    <button id="editParticipantH">Edit</button>
+                    <button id="editParticipantH" data-toggle="modal" data-target="#editParticipantM">Edit</button>
                     <button id="deleteEventButton">Delete</button>
                     <button id="archiveEventButton">Archive</button><br><br>
                     <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
@@ -256,6 +256,32 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+                </div>
+        </div>
+
+        <div class="modal fade" id="editParticipantM">
+                <div class="modal-dialog">
+                
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                   
+                        <h4 class="modal-title">Edit Event</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                    <span> Name :</span><br> <input type="text" id="editNameEvent" disabled ><br>
+                    <span> Creation Date :</span><br> <input type="text" id="editDateEvent" disabled><br>
+                    <span> Adress :</span><br> <input type="text" id="editAdresseEvent"><br>
+                    <span> Phone Number :</span><br> <input type="text" id="editphoneNumberEvent" ><br>
+                    <span> Type of organization :</span><br> <input type="text" id="editTypeOfOrgEvent" ><br>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" id="editSaveEvent" class="btn btn-default" data-dismiss="modal">Save</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -536,6 +562,7 @@
                 
                     });
 
+
                     function createEventBox(triggerAction,arrayofEvent){
                         $("#event").empty();
                         $("#event").append("<h3 style='margin-left:25%'> "+triggerAction+" </h3>");
@@ -560,6 +587,35 @@
                             $("#event").append(eventHtmlBox);
                         }
                     }
+
+
+                    $("#editParticipantH").click(function(){
+                        $.post('../../Controller/EventController/getEventInfoForEdit.php',{eventID:$("#storeEventId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    $("#editNameEvent").val(info[1][0]['name']);
+                                    $("#editDateEvent").val(info[1][0]['creationDate']);
+                                    $("#editAdresseEvent").val(info[1][0]['address']);
+                                    $("#editphoneNumberEvent").val(info[1][0]['phoneNumber']);
+                                    $("#editTypeOfOrgEvent").val(info[1][0]['typeOfOrg']);
+                                }else{
+                                }
+                            });
+                    });
+                    $("#editSaveEvent").click(function(){
+                        $.post('../../Controller/EventController/saveEditEvent.php',{
+                                                                                eventID:$("#storeEventId").val(),
+                                                                                eventAddress:$("#editAdresseEvent").val(),
+                                                                                eventPhoneNumber:$("#editphoneNumberEvent").val(),
+                                                                                eventOrg: $("#editTypeOfOrgEvent").val()
+                                                                                },function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert("Edit Event Succesfully!");
+                                }else{
+                                }
+                            });
+                    });
                     function createRightAllParticipantsBox(arrayofAllParticipant,canEdit){
                         $("#eventAllParticipants").empty();
 

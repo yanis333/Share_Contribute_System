@@ -15,7 +15,7 @@ $enableSandbox = true;
 $paypalConfig = [
     'client_id' => 'AVR0IBXQxIfhSXLwbNLFxNxSEUufo3_MUzRFXuUtVtmCCpeQ-29QxNVUkFBV4srIj1RMb-GFsP5koWW3',
     'client_secret' => 'EDFihXY0Nhs90O9g64-bif30gc-8fcMMngOHMxLPD3oKTS5Z5Num8icX4eo-nDgiWVyp9PkOfJi-KbJU',
-    'return_url' => 'http://sharecontributesystem/View/PayPal/response.php',
+    'return_url' => 'http://localhost/Share_Contribute_System/View/PayPal/response.php',
     'cancel_url' => 'http://sharecontributesystem/View/PayPal/payment-cancelled.php'
 ];
 // Database settings. Change these for your database configuration.

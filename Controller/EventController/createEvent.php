@@ -22,7 +22,11 @@ if(isset($_SESSION['username']))
                 mkdir("../../Files/Events/".$result2, 0700);
         }
         $db->query("insert into accevent values(".$_SESSION['usernameId'].",(select ID from acctype where Type = 'All'),".$result2." );");
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where isDeleted=0 order by ID desc");
+        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,
+                            case 
+                                when true then 1
+                                else 0
+                            end as paid from events where isDeleted=0 order by ID desc");
         if($result){
 
             while($row = $result->fetch_assoc()){
