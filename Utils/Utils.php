@@ -6,6 +6,9 @@ class Utils {
         return Utils::getTotalSize($path);
     }
 
+    public static function getWebsiteAbsolute(){
+        return "http://sharecontributesystem/";
+    }
     public static function getYearlyCost(){
         return 1500;
     }

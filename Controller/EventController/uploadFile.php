@@ -28,7 +28,7 @@
                 }
             }
             $result = $db->query("
-                    select pe.ID,u.name,pe.type,pe.date,pt.content,pet.pathOfFile  from postevent as pe left join  posttexttoevent as pt on pt.postID = pe.Id 
+                    select pe.ID,u.name,pe.type,pe.date,pt.content,pet.pathOfFile from postevent as pe left join  posttexttoevent as pt on pt.postID = pe.Id 
                     left join postelementtoevent as pet on pet.postID = pe.ID 
                     inner join users as u on u.id = pe.userID where pet.eventID = ".$eventId." or pt.eventID = ".$eventId." order by pe.date desc");
             $allInfo = array();
@@ -46,7 +46,15 @@
             $arrayInfo[1] = $allInfo;
             }
 
-            $result = $db->query("select aty.TypeRef as access from accevent as ae inner join acctype as aty on aty.ID = ae.access where ae.eventID = ".$eventId." and ae.userID =".$_SESSION['usernameId']."");
+            $result = $db->query("select 
+            CASE 
+            when (u.isAdmin = 1) then 'All'
+            when (u.isAdmin = 0 and u.id in (select userID from accevent where eventID = ".$eventId.")) then (select TypeRef from acctype where ID = ae.access)
+            end as access
+            from users as u
+            left join accevent as ae on u.id= ae.userID
+            left join acctype as aty on aty.ID = ae.access 
+            where (u.isAdmin = 1 or ae.eventID =".$eventId.") and u.id =".$_SESSION['usernameId']);
             $allInfo = array();
             if($result){
                 while($row = $result->fetch_assoc()){

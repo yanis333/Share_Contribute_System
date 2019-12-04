@@ -346,7 +346,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                    
-                    <h4 class="modal-title">Access Player</h4>
+                    <h4 class="modal-title">Access Participant</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -417,12 +417,16 @@
                         $("#divUpload").show();
                     });
                     $("#upload").on("click", function() {
+
                         var file_data = $("#uploadFile").prop("files")[0];   
                         var form_data = new FormData();
                         form_data.append("file", file_data);
                         form_data.append("eventId", $("#storeEventId").val());
                         $.ajax({
-                            url: "../../Controller/EventController/uploadFile.php",//To change
+                            url: "<?php 
+                                include_once('../../Utils/Utils.php');
+                                echo Utils::getWebsiteAbsolute();
+                                ?>Controller/EventController/uploadFile.php",
                             dataType: 'script',
                             cache: false,
                             contentType: false,
@@ -485,14 +489,12 @@
                             });
                        }else if(this.id.includes("completePayment")){
                            var idOfButtonClicked = this.id.substring(15);
-                           //redirect to request
-                        //    location.replace()
-                        //    $.post('../../Controller/PayPalController/request.php',{eventID:idOfButtonClicked});
-                            var form_data = new FormData();
-                            // form_data.append("file", file_data);
                             form_data.append("eventID", idOfButtonClicked);
                            $.ajax({
-                                url: "../../Controller/PayPalController/request.php",
+                                url: "<?php 
+                                include_once('../../Utils/Utils.php');
+                                echo Utils::getWebsiteAbsolute();
+                                ?>Controller/PayPalController/request.php",
                                 data: { eventID: idOfButtonClicked },              
                                 method: 'post',
                                 success: function(data){
