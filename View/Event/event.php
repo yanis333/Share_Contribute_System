@@ -199,7 +199,8 @@
                     <button id="editParticipantH" data-toggle="modal" data-target="#editParticipantM">Edit</button>
                     <button id="deleteEventButton">Delete</button>
                     <button id="archiveEventButton">Archive</button><br><br>
-                    <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Add Group</button>
+                    <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Invite</button>
+                    <button id="leaveEventModals" data-toggle="modal" data-target="#leaveEventModal" style="background-color: red">Leave Event</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>
                     <span>Nb of groups : </span><span id="nbGroupEvent"></span><br>
@@ -397,6 +398,29 @@
             </div>
         </div>
 
+        <div class="modal fade" id="leaveEventModal">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Are you sure you want to leave the event?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="storeUserID" hidden></input>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="leaveEvent" class="btn btn-default" data-dismiss="modal" style="background-color: red; border : 1px solid black">YES</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
             <script>
                 $(document).ready(function() {
                     $("#mainSpecificEvent").hide();
@@ -448,6 +472,26 @@
                             if(info[0]){
                                 alert("REMOVED SUCCESSFULLY");
                                 createRightAllParticipantsBox(info[2],info[3]['canEdit'][0]['canEdit']);
+                            }else{
+                            }
+                        });
+                    });
+
+                    $("#leaveEvent").click(function(){
+                        $.post('../../Controller/EventController/leaveEvent.php',{eventId:$("#storeEventId").val()},function(data){
+                            var info = JSON.parse(data);
+                            if(info[0]){
+                                alert("You SUCCESSFULLY left the event");
+                                $("#mainSpecificEvent").hide();
+                                $("#mainGenericEvent").show();
+                                $.post('../../Controller/EventController/searchUserEvent.php',{},function(data){
+                                    var info = JSON.parse(data);
+                                    if(info[0]){
+                                        createEventBox("All Events you are registered for!",info[1]);
+                                    }else{
+
+                                    }
+                                });
                             }else{
                             }
                         });
