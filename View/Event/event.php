@@ -480,6 +480,14 @@
                                 alert("You SUCCESSFULLY left the event");
                                 $("#mainSpecificEvent").hide();
                                 $("#mainGenericEvent").show();
+                                $.post('../../Controller/EventController/searchUserEvent.php',{},function(data){
+                                    var info = JSON.parse(data);
+                                    if(info[0]){
+                                        createEventBox("All Events you are registered for!",info[1]);
+                                    }else{
+
+                                    }
+                                });
                             }else{
                             }
                         });
