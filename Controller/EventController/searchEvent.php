@@ -6,7 +6,7 @@
     $arrayInfo[0] = false;
     if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
         $name = $_POST['name'];
-        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered from events where isDeleted=0 and name like '%".$name."%' order by name Asc");
+        $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,Case when true then 1 else 0 end as paid from events where isDeleted=0 and name like '%".$name."%' order by name Asc");
         $allInfo = array();
 
         if($result){
