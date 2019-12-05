@@ -7,8 +7,8 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-require '..\..\Controller\PayPalController\bootstrap.php';
-include '..\..\Controller\PayPalController\PayPal.php';
+include '../../Controller/PayPalController/bootstrap.php';
+include '../../Controller/PayPalController/PayPal.php';
 
 if (empty($_GET['paymentId']) || empty($_GET['PayerID']) || empty($_SESSION['usernameId'])) {
     header('location:payment-cancelled.php');

@@ -126,8 +126,8 @@
                         <div class="modal-body">
                             <span> Name :</span><br> <input type="text" id="uName" ><br>
                             <span> Date Of Birth :</span><br> <input type="date" id="userDOB"><br>
-                            <span> Email :</span><br> <input type="text" id="userEmail"> <br>
-                            <span> UserName :</span><br><input type="text" id="userName"><br>
+                            <span> Email :</span><br> <input type="text" id="email"> <br>
+                            <span> UserName :</span><br><input type="text" id="name"><br>
                             <span> Password :</span><br><input type="text" id="userPassword"><br>
                             <span> Is Admin :</span><br><input type="checkbox" id="isAdmin"><br>
                         </div>
@@ -198,7 +198,7 @@
 
                     $("#saveUser").click(function(){
                         var isAdminVal;
-                        if($("#uName").val() == ""||$("#userDOB").val() == ""||$("#userEmail").val() == ""||$("#userName").val() == "" || $("#userPassword").val() == ""){
+                        if($("#uName").val() == ""||$("#userDOB").val() == ""||$("#email").val() == ""||$("#name").val() == "" || $("#userPassword").val() == ""){
                             alert("All fields must be field");
                         }else{
                             if ($("#isAdmin").is(":checked"))
@@ -207,13 +207,13 @@
                             } else {
                                 isAdminVal = 0;
                             }
-                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("#userEmail").val(),userName:$("#userName").val(),password:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
+                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("email").val(),userName:$("#name").val(),password:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     alert("User "+ info[1] +"Created Successfully ");
                                 }else{
                                     alert("You need to be an admin to create a user");
-                                }
+                                on_encode(false)
                             });
                         }
                     });

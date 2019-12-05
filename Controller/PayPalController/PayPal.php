@@ -1,7 +1,7 @@
 <?php
 
-include('../../Model/Config/db_server.php');
-include('../../Utils/utils.php');
+require '../../Model/Config/db_server.php';
+require '../../Utils/Utils.php';
 class PayPal{
     private $db;
     public function __construct()

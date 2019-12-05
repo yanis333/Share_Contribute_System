@@ -619,7 +619,10 @@
                                                     eventHtmlBox +=  "<button id= \"eventRegister"+arrayofEvent[x]['ID']+"\" class='eventButton'  >Request</button><br>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1 && arrayofEvent[x]['paid'] == 0){
                                                     // eventHtmlBox +=  "<button id= \"completePayment"+arrayofEvent[x]['ID']+"\" class='eventButton'>Complete payment</button><br>";
-                                                    eventHtmlBox += "<form action='../../Controller/PayPalController/request.php' method='post' id='paypal_form'>" +
+                                                    eventHtmlBox += "<form action='<?php 
+                                include_once('../../Utils/Utils.php');
+                                echo Utils::getWebsiteAbsolute();
+                                ?>Controller/PayPalController/request.php' method='post' id='paypal_form'>" +
                                                     "<input type='hidden' name='eventID' value='" + arrayofEvent[x]['ID'] + "'/>" +
                                                     "<input class='eventButton' type='submit' name='submit' value='Complete Payment'/></form>";
                                                 }else if(arrayofEvent[x]['isRegistered'] == 1 && arrayofEvent[x]['paid'] == 1){

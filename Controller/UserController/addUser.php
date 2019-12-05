@@ -4,14 +4,16 @@ session_start();
 $db = new DB();
 $arrayInfo = array();
 $allInfo= array();
-$arrayInfo[0] = false;
+//echo $_SESSION['isAdmin'];
+//return;
+$arrayInfo[0] = $_SESSION['isAdmin'];
 if(isset($_SESSION['username']))
     if($_SESSION["username"] != null && $_SESSION['isAdmin'] == 1){
         $name = $_POST['name'];
         $userDOB = $_POST['userDOB'];
         $userEmail = $_POST['email'];
-        $userName = $_POST['userName'];
-        $userPassword = $_POST['password'];
+        $userName = $_POST['uName'];
+        $userPassword = $_POST['userPassword'];
         $isAdmin = $_POST['isAdmin'];
 
         if($name == "" || $userDOB == ""|| $userEmail == ""|| $userName == "" || $userPassword == ""){

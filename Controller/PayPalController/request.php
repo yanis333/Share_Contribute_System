@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         session_start();
     }
 
-    include '.\\PayPal.php';
+    require 'PayPal.php';
     $eventID = $_POST['eventID'];
     if (empty($eventID)) {
         throw new Exception('This script should not be called directly, expected post data');

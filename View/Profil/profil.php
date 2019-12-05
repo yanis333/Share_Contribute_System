@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_SESSION['usernameId'])){
 
-    include '..\..\Controller\PayPalController\PayPal.php';
+    include '../../Controller/PayPalController/PayPal.php';
 
     $paypal = new PayPal();
     $paymentHistory = $paypal->getPaidEventHistory($_SESSION['usernameId']);

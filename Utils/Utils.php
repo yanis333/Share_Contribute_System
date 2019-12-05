@@ -7,7 +7,7 @@ class Utils {
     }
 
     public static function getWebsiteAbsolute(){
-        return "http://sharecontributesystem/";
+        return "https://mrc353.encs.concordia.ca/";
     }
     public static function getYearlyCost(){
         return 1500;
@@ -25,7 +25,9 @@ class Utils {
     public static function getDiskUsageFactor($eventID){
         $size = Utils::getFileSizeUnderEvent($eventID);
         $totalSize = Utils::getTotalSize('..\..\Files\\');
-        $factor = $size / $totalSize;
+	if($totalSize == 0)
+		$totalSize = 1;
+	$factor = $size / $totalSize;
         return $factor;
     }
 }
