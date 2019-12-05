@@ -199,7 +199,7 @@
                     <button id="editParticipantH" data-toggle="modal" data-target="#editParticipantM">Edit</button>
                     <button id="deleteEventButton">Delete</button>
                     <button id="archiveEventButton">Archive</button><br><br>
-                    <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">Invite</button>
+                    <button id="addNewGroupToEvent" data-toggle="modal" data-target="#addNewGroup">New Group</button>
                     <button id="leaveEventModals" data-toggle="modal" data-target="#leaveEventModal" style="background-color: red">Leave Event</button>
                     <br>
                     <span>Nb of participants : </span><span id="nbParticipantEvent"></span><br>

@@ -15,7 +15,7 @@
                                     from events as e 
                                     where e.isDeleted=0 and e.id =".$idSelected." order by e.name Asc");
             $allInfo = array();
-
+           $arrayInfo[1]['eventheader']= array();
             if($result){
                 while($row = $result->fetch_assoc()){
                     $allInfo[] = $row;
@@ -31,6 +31,8 @@
                                     inner join users as u on u.id = e.userID
                                     where e.eventID =".$idSelected." order by u.name Asc");
             $allInfo = array();
+           $arrayInfo[1]['eventParticipant']=array();
+
 
             if($result){
                 while($row = $result->fetch_assoc()){
@@ -47,7 +49,7 @@
                                     inner join events as e on e.ID = g.eventID
                                     where e.isDeleted=0 and g.isDeleted=0 and e.ID =".$idSelected." order by g.name Asc");
             $allInfo = array();
-
+		$arrayInfo[1]['eventGroup'] = array();
             if($result){
                  while($row = $result->fetch_assoc()){
                      $allInfo[] = $row;
@@ -76,6 +78,7 @@
                                 left join postelementtoevent as pet on pet.postID = pe.ID 
                                 inner join users as u on u.id = pe.userID where pet.eventID = ".$idSelected." or pt.eventID = ".$idSelected." order by pe.date desc");
             $allInfo = array();
+		$arrayInfo[1]['eventPostContent'] = array();
             if($result){
                 while($row = $result->fetch_assoc()){
                     $allCommentInfo = array();
@@ -99,6 +102,7 @@
                                     left join acctype as aty on aty.ID = ae.access 
                                     where (u.isAdmin = 1 or ae.eventID =".$idSelected.") and u.id =".$_SESSION['usernameId']);
             $allInfo = array();
+$arrayInfo[1]['access'] = array();
             if($result){
                 while($row = $result->fetch_assoc()){
                     $allInfo[] = $row;
@@ -117,6 +121,7 @@
                                     where id =".$_SESSION['usernameId']."
                                     ");
             $allInfo = array();
+$arrayInfo[1]['canEdit'] = array();
             if($result){
                 while($row = $result->fetch_assoc()){
                     $allInfo[] = $row;
@@ -127,6 +132,7 @@
 
             $result = $db->query("select managerID from events where isDeleted=0 and ID=".$idSelected);
             $allInfo = array();
+$arrayInfo[1]['eventManager'] = array();
             if($result){
                 while($row = $result->fetch_assoc()){
                     $allInfo[] = $row;
