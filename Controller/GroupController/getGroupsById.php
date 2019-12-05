@@ -10,7 +10,7 @@
 
         $idSelected = $_POST['id'];
             $result = $db->query("select * 
-                                    from groups as g 
+                                    from `groups` as g 
                                     left join groupparticipants as gp on gp.groupID = g.id 
                                     where g.isDeleted=0 and eventID in 
                                         (select e.Id 
@@ -36,7 +36,7 @@
                                     g.managerID,
                                     g.creationDate,
                                     g.eventID
-                                    from groups as g 
+                                    from `groups` as g 
                                     where g.isDeleted=0 and g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$idSelected.")");
             $allInfo = array();
 

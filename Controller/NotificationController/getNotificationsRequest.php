@@ -13,7 +13,7 @@
                                 g.id as groupID,
                                 g.name as groupname
                             from grouprequest gr
-                            inner join groups as g on g.id = gr.groupID 
+                            inner join `groups` as g on g.id = gr.groupID 
                             inner join users as u on u.ID = gr.userID
                             where g.managerID = ".$_SESSION['usernameId']);
         $allInfo = array();

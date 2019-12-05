@@ -34,7 +34,7 @@ if(isset($_SESSION['username']))
         $result = $db->query("Select 
                                     Case
                                     when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
-                                    when exists(select ID from groups where ID =".$groupId." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    when exists(select ID from `groups` where ID =".$groupId." and managerID = ".$_SESSION['usernameId'].") then 1
                                     else 0
                                     end as canEdit
                                     

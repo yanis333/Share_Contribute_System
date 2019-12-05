@@ -19,7 +19,11 @@
             return;
         }
         $db->query("insert into `groups`(name,managerID,creationDate,eventID) values('".$name."','".$_SESSION["usernameId"]."','". date('Y-m-d H:i:s')."','".$id."')");
+<<<<<<< HEAD
         $result = $db->query("select ID from groups where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
+=======
+        $result = $db->query("select ID from `groups` where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
+>>>>>>> 82c946cc88d6ebdaa1d6749598347a8f6982bf13
 
         if($result){
             

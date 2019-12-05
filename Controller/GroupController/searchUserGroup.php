@@ -9,7 +9,7 @@
         if($_SESSION["username"]!=null && $_SESSION['isAdmin'] == 1){
 
             $result = $db->query("select g.ID,g.name,e.name as eventName,Case When true then 1 end as isRegistered
-                                    from groups as g left join events as e on e.ID=g.eventID where g.isDeleted=0 and e.isDeleted=0");
+                                    from `groups` as g left join events as e on e.ID=g.eventID where g.isDeleted=0 and e.isDeleted=0");
 
             $allInfo = array();
     
@@ -32,7 +32,7 @@
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
-                                    from groups as g 
+                                    from `groups` as g 
                                     left join events as e on e.ID=g.eventID
                                     where g.isDeleted=0 and e.isDeleted=0 and g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$_SESSION['usernameId'].")");
             $allInfo = array();
@@ -51,7 +51,7 @@
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
-                                     from groups as g 
+                                     from `groups` as g 
                                      left join events as e on e.ID = g.eventID
                                      where e.isDeleted=0 and g.isDeleted=0 and eventID in 
                                      (select e.Id 

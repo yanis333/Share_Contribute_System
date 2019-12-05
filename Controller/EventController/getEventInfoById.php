@@ -45,7 +45,7 @@
             $result = $db->query("select 
                                     e.ID,
                                     g.name
-                                    from groups as g 
+                                    from `groups` as g 
                                     inner join events as e on e.ID = g.eventID
                                     where e.isDeleted=0 and g.isDeleted=0 and e.ID =".$idSelected." order by g.name Asc");
             $allInfo = array();

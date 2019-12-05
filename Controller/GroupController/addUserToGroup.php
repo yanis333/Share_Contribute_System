@@ -24,7 +24,7 @@
                     end as isRegistered
 
                     from eventparticipants as ep inner join events as e on ep.eventID = e.ID
-                    inner join groups as g on e.ID = g.eventID
+                    inner join `groups` as g on e.ID = g.eventID
                     inner join users as u on u.ID = ep.userID where g.ID = ".$groupId." group by u.ID;");
         $allInfo = array();
         if($result){
@@ -53,7 +53,7 @@
         $result = $db->query("Select 
                                     Case
                                     when exists(select id from users where isAdmin =1 and id=".$_SESSION['usernameId'].") then 1
-                                    when exists(select ID from groups where ID =".$groupId." and managerID = ".$_SESSION['usernameId'].") then 1
+                                    when exists(select ID from `groups` where ID =".$groupId." and managerID = ".$_SESSION['usernameId'].") then 1
                                     else 0
                                     end as canEdit
                                     
