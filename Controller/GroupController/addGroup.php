@@ -13,17 +13,29 @@
         $name = $_POST['name'];
         $id = $_POST['id'];
         $allUserID = json_decode($_POST['userId']);
-        
-        if($name == "" || $id==""){
+       	array_push($allUserID, intval($_SESSION['usernameId']));
+	//echo var_dump($allUserID);
+	//return;
+	//echo $name;
+	//echo $id;
+	//foreach($allUserID as $value){
+	//	echo "user ID: ".$value;
+	//}
+        //return;
+	if($name == "" || $id==""){
             echo json_encode(false);
             return;
         }
-        $db->query("insert into `groups`(name,managerID,creationDate,eventID) values('".$name."','".$_SESSION["usernameId"]."','". date('Y-m-d H:i:s')."','".$id."')");
-<<<<<<< HEAD
-        $result = $db->query("select ID from groups where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
-=======
-        $result = $db->query("select ID from `groups` where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
->>>>>>> 82c946cc88d6ebdaa1d6749598347a8f6982bf13
+	//if(empty($allUserID)){
+	//	$allUserID = $_SESSION['usernameId'];
+		//echo "hello my id is: ${allUserID}"; return;
+	//}
+	//echo var_dump($allUserID) . "/n";
+	//echo "allUserID: " . $allUserID;
+	//return;
+		
+        $db->query("insert into `groups`(name,managerID,creationDate,eventID) values('".$name."',".$_SESSION['usernameId'].",'". date('Y-m-d H:i:s')."',".$id.")");
+        $result = $db->query("select id from `groups` where name='".$name."' AND managerID=".$_SESSION['usernameId']);
 
         if($result){
             
@@ -36,7 +48,7 @@
         }
         
         foreach($allUserID as $value)  {
-             $db->query("insert into groupparticipants  (userID,groupID) values ('".$value."','".$arrayInfo[1][0]['ID']."')");
+             $db->query("insert into groupparticipants (userID,groupID) values (".$value.",".$arrayInfo[1][0]['id'].")");
             }
 
 

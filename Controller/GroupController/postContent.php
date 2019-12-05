@@ -10,13 +10,15 @@
         $content = $_POST['content'];
         $type = $_POST['type'];
         $groupID = $_POST['groupID'];
+	
 
         if($content == "" || $type == ""){
             echo json_encode(false);
             return;
         }
-        $db->query("insert into postgroup(userID,groupID,type,date)values(".$_SESSION["usernameId"].",'".$groupID."','".$type."', NOW())");
+        $db->query("insert into postgroup(userID,groupID,type,date)values(".$_SESSION["usernameId"].",".$groupID.",'".$type."', NOW())");
 
+        
         $result = $db->query("select * from postgroup where userID =".$_SESSION["usernameId"]." and type = '".$type."' order by ID desc");
         if($result){
             $postInserted = array();
@@ -24,7 +26,7 @@
                 $postInserted[] = $row;
                 break;
             }
-        $db->query("insert into posttexttogroup(content,postID,groupID)values('".$content."', ".$postInserted[0]['ID'].", '".$groupID."')");  
+        $db->query("insert into posttexttogroup(content,postID,groupID)values('".$content."', ".$postInserted[0]['ID'].", ".$groupID.")");  
         
         $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
                                 inner join users as u on u.id = p.userID where pt.groupID = ".$groupID." order by p.date desc");

@@ -29,6 +29,7 @@
                                     e.name as eventName,
                                     case
                                     when g.ID in (select groupID from groupparticipants where userID = ".$_SESSION['usernameId'].") then 1
+when g.managerID = ".$_SESSION['usernameId']." then 1
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
@@ -48,6 +49,7 @@
             $result = $db->query("select g.ID,g.name,e.name as eventName,
                                     case
                                     when g.ID in (select groupID from groupparticipants where userID = ".$_SESSION['usernameId'].") then 1
+when g.managerID = ".$_SESSION['usernameId']." then 1
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered

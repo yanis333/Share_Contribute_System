@@ -406,7 +406,7 @@
                         else {
                             $("#group2").append("<h3 style='text-align:center'> "+triggerAction+" </h3>");
                         }
-                        
+                        if(arrayofEvent != undefined){
                         for(var x = 0; x<arrayofEvent.length;x++ ){
                             var eventHtmlBox = "<div class = 'listOfGroups' > "+
                                                 "<span id= #manne> Group Name : "+arrayofEvent[x]['name']+"</span><br>"+
@@ -422,12 +422,12 @@
                                                 eventHtmlBox +=  "</div>"
                                                 
                             $("#group").append(eventHtmlBox);
-                        }
+                        }}
                     }
 
                     function createRightAllParticipantsBox(arrayofAllParticipant,canEdit){
                         $("#groupAllParticipants").empty();
-
+			if(arrayofAllParticipant != undefined){
                         $("#nbParticipantGroup").text(arrayofAllParticipant.length);
                         for(var x = 0; x<arrayofAllParticipant.length;x++ ){
                             var participantHtmlBox = "<div class = 'allParticipantGroup' > "+
@@ -439,12 +439,12 @@
                             }
                             participantHtmlBox +=  "</div>"
                             $("#groupAllParticipants").append(participantHtmlBox);
-                        }
+                        }}
                     }
 
                     function MyGroupBox(arrayOfMyGroups){
                         $("#myGroups").empty();
-
+			if(arrayOfMyGroups != undefined){
                         for(var x = 0; x<arrayOfMyGroups.length;x++ ){
                             var groupHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayOfMyGroups[x]['name']+"</span>";
@@ -452,12 +452,12 @@
                                                 groupHtmlBox +=  "</div>"
                                                 
                             $("#myGroups").append(groupHtmlBox);
-                        }
+                        }}
                     }
 
                     function ParticipatingGroupBox(arrayOfMyGroups){
                         $("#groupsParticipating").empty();
-
+			if(arrayOfMyGroups != undefined){
                         for(var x = 0; x<arrayOfMyGroups.length;x++ ){
                             var groupHtmlBox = "<div class = 'allParticipantGroup' > "+
                                                 "<span> "+(x+1)+") "+arrayOfMyGroups[x]['name']+"</span>";
@@ -465,12 +465,14 @@
                                                 groupHtmlBox +=  "</div>"
                                                 
                             $("#groupsParticipating").append(groupHtmlBox);
-                        }
+                        }}
                     }
 
                     function createPostBox(arrayofPost, access){
                         $("#postContentDiv").empty();
+			if(arrayofPost != undefined){
                         $("#nbPostGroup").text(arrayofPost.length);
+			
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroupPost'>" +
                                                 "<h5>"+arrayofPost[x]['name']+"</h4> "+
@@ -483,12 +485,13 @@
                             postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
                                 "</div>"
                             $("#postContentDiv").append(postHtmlBox);
-                        }
+                        }}
                     }
 
                     function createCommentBox(arrayofComment){
                         //$("#nbPostEvent").text(arrayofComment.length);
                         var commentHtmlBox = "<br><br>";
+			if(arrayofComment != undefined){
                         for(var x = 0; x<arrayofComment.length;x++ ){
                              commentHtmlBox += "<div style = 'border-top: 1px black solid;margin-left:2%'>" +
                                                 "<span style=\"margin-right:5%\">"+arrayofComment[x]['name']+"</span> "+
@@ -497,7 +500,7 @@
                                                 "</div><br>"
                                                 
 
-                        }
+                        }}
                         return commentHtmlBox;
                     }
 
