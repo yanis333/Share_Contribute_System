@@ -133,14 +133,17 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_SESSION['usernameId'])){
                     $.post('../../Controller/UserController/getCurrentUserInformation.php',{},function(data){
                             var info = JSON.parse(data);
                             if(info[0]){
+				var date = new Date(info[1]['birth']);
+				var month = date.getMonth() + 1;
+				var formattedDate = date.getDate() + '-' + month + '-' + date.getFullYear();
                                 $('#userName').text(info[1]['name']);
                                 $('#userUsername').text(info[1]['username']);
-                                $('#userBirthday').text(info[1]['BirthDate']);
+                                $('#userBirthday').text(formattedDate);
 
                                 //for modal
                                 $('#nameEdit').val(info[1]['name']);
                                 $('#usernameEdit').text(info[1]['username']);
-                                $('#birthdayEdit').text(info[1]['BirthDate']);
+                                $('#birthdayEdit').text(formattedDate);
                             }else{
 
                             }

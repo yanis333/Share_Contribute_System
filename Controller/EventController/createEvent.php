@@ -20,7 +20,10 @@ if(isset($_SESSION['username']))
         $result2 = $db->getLastInsertedId();
         if($result2){
                 mkdir("../../Files/Events/".$result2, 0700);
-        }
+        	$stmt = $db->prepare("insert into eventparticipants(userID, eventID) values(?,?)");
+		$stmt->bind_param("ii", $_SESSION['usernameId'], $result2);
+		$stmt->execute();
+	}
         $db->query("insert into accevent values(".$_SESSION['usernameId'].",(select ID from acctype where Type = 'All'),".$result2." );");
         $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,
                             case 
