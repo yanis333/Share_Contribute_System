@@ -6,7 +6,7 @@ $arrayInfo = array();
 $allInfo= array();
 //echo $_SESSION['isAdmin'];
 //return;
-$arrayInfo[0] = $_SESSION['isAdmin'];
+$arrayInfo[0] = false;
 if(isset($_SESSION['username']))
     if($_SESSION["username"] != null && $_SESSION['isAdmin'] == 1){
         $name = $_POST['name'];
@@ -15,7 +15,6 @@ if(isset($_SESSION['username']))
         $userName = $_POST['uName'];
         $userPassword = $_POST['userPassword'];
         $isAdmin = $_POST['isAdmin'];
-
         if($name == "" || $userDOB == ""|| $userEmail == ""|| $userName == "" || $userPassword == ""){
             echo json_encode(false);
             return;

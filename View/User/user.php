@@ -197,23 +197,21 @@
                     });
 
                     $("#saveUser").click(function(){
-                        var isAdminVal;
+                        var isAdminVal = 0;
                         if($("#uName").val() == ""||$("#userDOB").val() == ""||$("#email").val() == ""||$("#name").val() == "" || $("#userPassword").val() == ""){
                             alert("All fields must be field");
                         }else{
                             if ($("#isAdmin").is(":checked"))
                             {
                                 isAdminVal = 1;
-                            } else {
-                                isAdminVal = 0;
                             }
-                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("email").val(),userName:$("#name").val(),password:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
+                            $.post('../../Controller/UserController/addUser.php',{name:$("#uName").val(),userDOB:$("#userDOB").val(),email:$("#email").val(),uName:$("#name").val(),userPassword:$("#userPassword").val(),isAdmin:isAdminVal},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
                                     alert("User "+ info[1] +"Created Successfully ");
                                 }else{
                                     alert("You need to be an admin to create a user");
-                                on_encode(false)
+                               }
                             });
                         }
                     });
