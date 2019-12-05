@@ -13,7 +13,7 @@
                 $result = $db->query("select 
                                         g.ID,
                                         g.name
-                                        from groups as g
+                                        from `groups` as g
                                         where g.isDeleted=0 and g.id =".$idSelected." order by g.name Asc");
                 $allInfo = array();
     
@@ -67,7 +67,7 @@
                                 
                                     from eventparticipants as ep 
                                     inner join events as e on ep.eventID = e.ID
-                                    inner join groups as g on e.ID = g.eventID 
+                                    inner join `groups` as g on e.ID = g.eventID 
                                     inner join users as u on u.ID = ep.userID where g.isDeleted=0 AND g.ID = ".$idSelected." group by u.ID
                                     ");
                 $allInfo = array();
@@ -82,7 +82,7 @@
 
             $result = $db->query("select 
                                     g.managerID
-                                    from groups as g 
+                                    from `groups` as g 
                                     where g.isDeleted=0 and g.ID =".$idSelected."");
             $allInfo = array();
 
@@ -114,7 +114,7 @@
 
             $result = $db->query("Select 
                                     Case
-                                    when exists(select id from groups where isDeleted=0 and id =".$idSelected." and managerID = ".$_SESSION['usernameId'].") or isAdmin = 1 then 1
+                                    when exists(select id from `groups` where isDeleted=0 and id =".$idSelected." and managerID = ".$_SESSION['usernameId'].") or isAdmin = 1 then 1
                                     else 0
                                     end as canEdit
                                     

@@ -18,8 +18,8 @@
             echo json_encode(false);
             return;
         }
-        $db->query("insert into groups(name,managerID,creationDate,eventID) values('".$name."','".$_SESSION["usernameId"]."','". date('Y-m-d H:i:s')."','".$id."')");
-        $result = $db->query("select ID from groups where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
+        $db->query("insert into `groups`(name,managerID,creationDate,eventID) values('".$name."','".$_SESSION["usernameId"]."','". date('Y-m-d H:i:s')."','".$id."')");
+        $result = $db->query("select ID from `groups` where name='".$name."' AND managerID='".$_SESSION["usernameId"]."'");
 
         if($result){
             
@@ -40,7 +40,7 @@
         $result = $db->query("select 
                                     e.ID,
                                     g.name
-                                    from groups as g 
+                                    from `groups` as g 
                                     inner join events as e on e.ID = g.eventID
                                     where g.isDeleted=0 and e.isDeleted=0 and e.ID =".$id." order by g.name Asc");
 

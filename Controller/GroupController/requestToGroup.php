@@ -40,7 +40,7 @@ if(isset($_SESSION['username']))
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
-                                    from groups as g 
+                                    from `groups` as g 
                                     left join events as e on e.ID=g.eventID
                                     where g.isDeleted=0 and e.isDeleted=0 and g.id in (select gp.groupID from groupparticipants as gp where gp.userID =".$_SESSION['usernameId']." and g.name like '%".$name."%' order by g.name Asc)");
         $allInfo = array();
@@ -60,7 +60,7 @@ if(isset($_SESSION['username']))
                                     when g.ID in (select groupID from grouprequest where userID = ".$_SESSION["usernameId"].") then 2
                                     else 0
                                     end as isRegistered
-                                     from groups as g 
+                                     from `groups` as g 
                                      left join events as e on e.ID = g.eventID
                                      where g.isDeleted=0 and e.isDeleted=0 and eventID in 
                                      (select e.Id 
@@ -81,7 +81,7 @@ if(isset($_SESSION['username']))
         }
 
         $result = $db->query("select u.name as username,u.email, g.name as groupname 
-        from groups as g left join  users as u on u.ID = g.managerID where g.id= (select id from groups where id='".$groupId."')");
+        from `groups` as g left join  users as u on u.ID = g.managerID where g.id= (select id from `groups` where id='".$groupId."')");
 
         if($result){
             $row = $result->fetch_assoc();
