@@ -1,7 +1,7 @@
 <?php
 class Utils {
     public static function getFileSizeUnderEvent($eventID){
-        $path = '..\..\Files\Events\\'.$eventID.'\\';
+        $path = '../Files/Events/'.$eventID.'/';
 
         return Utils::getTotalSize($path);
     }
@@ -24,7 +24,7 @@ class Utils {
 
     public static function getDiskUsageFactor($eventID){
         $size = Utils::getFileSizeUnderEvent($eventID);
-        $totalSize = Utils::getTotalSize('..\..\Files\\');
+        $totalSize = Utils::getTotalSize('../Files/');
 	if($totalSize == 0)
 		$totalSize = 1;
 	$factor = $size / $totalSize;

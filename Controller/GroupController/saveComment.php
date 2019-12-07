@@ -11,11 +11,21 @@
         $comment = $_POST['comment'];
         $groupID = $_POST['groupId'];
 
+	//echo 'COmment: '.$comment.'-id: '.$id.'groupID: '.$groupID.'-usernameID'.$_SESSION['usernameId'];
+	//return;
         if($id == "" || $comment == ""){
             echo json_encode(false);
             return;
         }
-        $db->query("insert into commentpostgroup(userID,postID,comment,date) values(".$_SESSION['usernameId'].",".$id.",'".$comment."',NOW())");
+	//echo "   ";
+	$q = "insert into commentpostgroup(userID,postID,comment,date) values(".$_SESSION['usernameId'].",".$id.",'".$comment."',NOW())";
+	//echo $q;
+	//return;
+	$result = $db->query($q);
+	//if($result){
+	//	echo "hello world";
+	//}
+	
 
         $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
                                 inner join users as u on u.id = p.userID where pt.groupID = ".$groupID." order by p.date desc");
