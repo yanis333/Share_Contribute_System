@@ -501,7 +501,9 @@
 
                     function createPostBox(arrayofPost, access){
                         $("#postContentDiv").empty();
-			if(arrayofPost != undefined){
+                        var images =0;
+                        if(arrayofPost != undefined){
+                            
                         $("#nbPostGroup").text(arrayofPost.length);
 			
                         for(var x = 0; x<arrayofPost.length;x++ ){
@@ -512,6 +514,7 @@
                                                     postHtmlBox+="<h4>"+arrayofPost[x]['content']+"</h4><br>";
                                                 }
                                                 if(arrayofPost[x]['type'] == 'Image'){
+                                                    images++;
                                                     postHtmlBox+="<img src=\""+arrayofPost[x]['pathOfFile']+"\" alt=\"Image\" width=\"100%\" height=\"500\"><br>";
                                                 }
                                                 if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
@@ -521,7 +524,9 @@
                             postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
                                 "</div>"
                             $("#postContentDiv").append(postHtmlBox);
-                        }}
+                        }
+                        }
+                        $("#nbImageGroup").text(images);
                     }
 
                     function createCommentBox(arrayofComment){
