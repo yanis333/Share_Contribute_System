@@ -28,8 +28,9 @@
             }
         $db->query("insert into posttexttogroup(content,postID,groupID)values('".$content."', ".$postInserted[0]['ID'].", ".$groupID.")");  
         
-        $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
-                                inner join users as u on u.id = p.userID where pt.groupID = ".$groupID." order by p.date desc");
+        $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content,pet.pathOfFile from postgroup as p  left join posttexttogroup as pt on pt.postID = p.ID
+                            left join postelementtogroup as pet on pet.postID = p.ID     
+                            inner join users as u on u.id = p.userID where pet.groupID = ".$groupID." or  pt.groupID = ".$groupID." order by p.date desc");
         if($result){
             while($row = $result->fetch_assoc()){
                 $allCommentInfo = array();
