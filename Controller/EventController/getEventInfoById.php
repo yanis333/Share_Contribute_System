@@ -92,6 +92,17 @@
                 $arrayInfo[1]['eventPostContent'] = $allInfo;
             }
 
+            $result = $db->query("select isActive as archive from events where ID = ".$idSelected);
+                    $allInfo = array();
+                    $arrayInfo[1]['archive'] = 1;
+                    if($result){
+                        while($row = $result->fetch_assoc()){
+                            $allInfo[] = $row;
+                        }
+                        $arrayInfo[0] = true;
+                        $arrayInfo[1]['archive'] = $allInfo;
+                    }
+
             $result = $db->query("select 
                                     CASE 
                                     when (u.isAdmin = 1) then 'All'
