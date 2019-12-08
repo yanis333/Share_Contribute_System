@@ -4,10 +4,10 @@ class DB{
     private $lastId;
     public function __construct()
     {
-        $servername = "us-cdbr-iron-east-05.cleardb.net:3306";
-        $username = "b9fb0372682c82";
-        $password = "f3d42555";
-        $database = "heroku_99595f089932bf8";
+        $servername = "mrc353.encs.concordia.ca";
+        $username = "mrc353_2";
+        $password = "D2HN8a";
+        $database = "mrc353_2";
         $this->db = mysqli_connect($servername,$username,$password,$database);
         
     }
