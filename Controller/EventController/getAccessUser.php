@@ -10,7 +10,10 @@ if(isset($_SESSION['username']))
         $eventId = $_POST['eventId'];
         $userId = $_POST['userId'];
 
-        $result = $db->query("Select u.name,u.id as userID,t.Type from accevent as e inner join acctype as t  on e.access = t.ID inner join users as u on u.id = e.userID  where e.eventID = ".$eventId." and userID = ".$userId."");
+        $stmt = $db->prepare("Select u.name,u.id as userID,t.Type from accevent as e inner join acctype as t  on e.access = t.ID inner join users as u on u.id = e.userID  where e.eventID=? and userID=?");
+        $stmt->bind_param("ii", $eventId, $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $allInfo = array();
 
         if($result){

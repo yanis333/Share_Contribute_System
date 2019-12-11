@@ -5,20 +5,23 @@
     $arrayUserInfo=array();
     $arrayUserInfo[0] = false;
     if(isset($_SESSION['username']))
-    if($_SESSION["username"]!=null){
-        
-    $result = $db->query("Select * from users where id='".$_SESSION["usernameId"]."'");
+        if($_SESSION["username"]!=null){
+            
+            $stmt = $db->prepare("Select * from users where id=?");
+            $stmt->bind_param("i", $_SESSION["usernameId"]);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if($result != null){
-            $row = $result->fetch_assoc();
-            // if query returns 1 value
+            if($result != null){
+                $row = $result->fetch_assoc();
+                // if query returns 1 value
 
-            if($row!=null){
-                $arrayUserInfo[0] = true;
-                $arrayUserInfo[1] = $row;
-            }
-        }       
-    }
+                if($row!=null){
+                    $arrayUserInfo[0] = true;
+                    $arrayUserInfo[1] = $row;
+                }
+            }       
+        }
 
     echo json_encode($arrayUserInfo);
 

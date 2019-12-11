@@ -6,19 +6,24 @@
     $arrayInfo[0] = false;
  
     if(isset($_SESSION['username']))
-    {if($_SESSION["username"]!=null){
-        $idSelected = $_POST['id'];
-            $result = $db->query(" select 
-                                    message,
-                                    CASE
-                                        WHEN
-                                            userID = ".$_SESSION['usernameId']."
-                                        THEN 1
-                                        ELSE 0
-                                        END as mine
-                                    from messageuser
-                                    where conversationID = ".$idSelected." order by date 
-                                    ");
+    {
+        if($_SESSION["username"]!=null){
+            $idSelected = $_POST['id'];
+            $userId = $_SESSION['usernameId'];
+
+            $stmt = $db->prepare("select 
+            message,
+            CASE
+                WHEN
+                    userID=?
+                THEN 1
+                ELSE 0
+                END as mine
+            from messageuser
+            where conversationID = ? order by date");
+            $stmt->bind_param("ii", $userId, $idSelected);
+            $stmt->execute();
+            $result = $stmt->get_result();
             $allInfo = array();
             if($result){
                 while($row = $result->fetch_assoc()){
@@ -26,15 +31,19 @@
                 }
                 $arrayInfo[1] = $allInfo;
             }
-            $result = $db->query(" select 
-                                    CASE
-                                    When c.userID1 = 1 then (select name from users where ID = c.userID2)
-                                    else (select name from users where ID = c.userID1)
-                                    end as name
-                                from conversation as c
-                                    where (c.userID1 = ".$_SESSION['usernameId']." Or c.userID2 = ".$_SESSION['usernameId'].")
-                                        and c.Id =  ".$idSelected."
-                                    ");
+
+            $stmt = $db->prepare("select 
+            CASE
+            When c.userID1 = 1 then (select name from users where ID = c.userID2)
+            else (select name from users where ID = c.userID1)
+            end as name
+        from conversation as c
+            where (c.userID1=? Or c.userID2 ?)
+                and c.Id=?");
+            $stmt->bind_param("iii", $userId, $userId, $idSelected);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
             $allInfo = array();
             if($result){
                 while($row = $result->fetch_assoc()){
@@ -44,7 +53,7 @@
                 $arrayInfo[2] = $allInfo;
             }
 
+        }
     }
-}
     echo json_encode($arrayInfo);
 ?>

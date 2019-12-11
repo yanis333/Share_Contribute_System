@@ -9,8 +9,15 @@
     if($_SESSION["username"] != null){
         $eventId = $_POST['eventId'];
 
-        $db->query("update events set isActive = 0 where ID = ".$eventId);
-        $result = $db->query("select isActive from events where ID = ".$eventId);
+        $stmt = $db->prepare("update events set isActive = 0 where ID=?");
+        $stmt->bind_param("i", $eventId);
+        $stmt->execute();
+
+        $stmt = $db->prepare("select isActive from events where ID=?");
+        $stmt->bind_param("i", $eventId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         $allInfo = array();
 
         if($result){

@@ -7,19 +7,35 @@ $arrayInfo[0] = false;
 if(isset($_SESSION['username'])){
     $userId = $_POST['userId'];
     $groupId = $_POST['groupId'];
-    $db->query("insert into accgroup(userID,access,groupID) values(".$userId.",1,".$groupId.")");
-    $result = $db->query("insert into groupparticipants(userID,groupID) values(".$userId.",".$groupId.") ");
-    $result = $db->query("delete from grouprequest where userID = ".$userId." and groupID = ".$groupId);
+    $sessionUserId = $_SESSION['usernameId'];
+
+    //insert into group participants
+    $stmt = $db->prepare("insert into groupparticipants(userID,groupID) values(?,?)");
+    $stmt->bind_param("ii", $userId, $groupId);
+    $stmt->execute();
+
+    //insert into access for the group
+    $stmt = $db->prepare("insert into accgroup(userID,access,groupID) values(?,1,?)");
+    $stmt->bind_param("ii", $userId, $groupId);
+    $stmt->execute();
+
+    $stmt = $db->prepare("delete from grouprequest where userID = ? and groupID = ?");
+    $stmt->bind_param("ii", $userId, $groupId);
+    $stmt->execute();
+
     /*                GROUP REQUESTS                      */
-    $result = $db->query("  select 
-                                u.ID as userID, 
-                                u.name,
-                                g.id as groupID,
-                                g.name as groupname
-                            from grouprequest gr
-                            inner join `groups` as g on g.id = gr.groupID 
-                            inner join users as u on u.ID = gr.userID
-                            where g.managerID = ".$_SESSION['usernameId']);
+    $stmt = $db->prepare("select 
+        u.ID as userID, 
+        u.name,
+        g.id as groupID,
+        g.name as groupname
+    from grouprequest gr
+    inner join `groups` as g on g.id = gr.groupID 
+    inner join users as u on u.ID = gr.userID
+    where g.managerID = ?");
+    $stmt->bind_param("i", $sessionUserId);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $allInfo = array();
     if($result){
 
@@ -30,15 +46,18 @@ if(isset($_SESSION['username'])){
         $arrayInfo[1] = $allInfo;
     }
     /*                EVENT REQUESTS                      */
-    $result = $db->query("  select 
-                                u.ID as userID, 
-                                u.name,
-                                e.ID as eventID,
-                                e.name as eventname
-                            from eventrequest er
-                            inner join events as e on e.ID = er.eventID 
-                            inner join users as u on u.ID = er.userID 
-                            where e.managerID = ".$_SESSION['usernameId']);
+    $stmt = $db->prepare("select 
+            u.ID as userID, 
+            u.name,
+            e.ID as eventID,
+            e.name as eventname
+        from eventrequest er
+        inner join events as e on e.ID = er.eventID 
+        inner join users as u on u.ID = er.userID 
+        where e.managerID = ?");
+    $stmt->bind_param("i", $sessionUserId);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $allInfo = array();
     if($result){
 

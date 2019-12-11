@@ -18,13 +18,6 @@ $paypalConfig = [
     'return_url' => 'https://mrc353.encs.concordia.ca/View/PayPal/response.php',
     'cancel_url' => 'https://mrc353.encs.concordia.ca/View/PayPal/payment-cancelled.php'
 ];
-// Database settings. Change these for your database configuration.
-$dbConfig = [
-    'host' => 'us-cdbr-iron-east-05.cleardb.net:3306',
-    'username' => 'b9fb0372682c82',
-    'password' => 'f3d42555',
-    'name' => 'heroku_99595f089932bf8'
-];
 $apiContext = getApiContext($paypalConfig['client_id'], $paypalConfig['client_secret'], $enableSandbox);
 /**
  * Set up a connection to the API

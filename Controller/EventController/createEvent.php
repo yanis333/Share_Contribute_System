@@ -11,20 +11,28 @@ if(isset($_SESSION['username']))
         $address = $_POST['address'];
         $phone = $_POST['phone'];
         $type = $_POST['type'];
+        $userId = $_SESSION['usernameId'];
 
         if($name == "" || $address == ""|| $phone == ""|| $type == ""){
             echo json_encode(false);
             return;
         }
-        $db->query("insert into events(name,managerID,address,phoneNumber,isActive,typeOfOrg) values('".$name."','".$_SESSION['usernameId']."','".$address."','".$phone."',1,'".$type."')");
-        $result2 = $db->getLastInsertedId();
+        $stmt = $db->prepare("insert into events(name,managerID,address,phoneNumber,isActive,typeOfOrg) values(?,?,?,?,1,?)");
+        $stmt->bind_param("sisss", $name, $userId, $address, $phone, $type);
+        $stmt->execute();
+        $result2 = $stmt->insert_id;
+        
         if($result2){
-                mkdir("../../Files/Events/".$result2, 0700);
+            mkdir("../../Files/Events/".$result2, 0700);
         	$stmt = $db->prepare("insert into eventparticipants(userID, eventID) values(?,?)");
-		$stmt->bind_param("ii", $_SESSION['usernameId'], $result2);
-		$stmt->execute();
-	}
-        $db->query("insert into accevent values(".$_SESSION['usernameId'].",(select ID from acctype where Type = 'All'),".$result2." );");
+		    $stmt->bind_param("ii", $_SESSION['usernameId'], $result2);
+		    $stmt->execute();
+        }
+
+        $stmt = $db->prepare("insert into accevent values(?,(select ID from acctype where Type = 'All'),?)");
+        $stmt->bind_param("ii", $userId, $result2);
+        $stmt->execute();
+
         $result = $db->query("select ID, name,Case When true then 1 end as isRegistered,
                             case 
                                 when true then 1
