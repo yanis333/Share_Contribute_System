@@ -27,5 +27,5 @@
 ### Setup
 - Project is already setup and running on our assigned school webserver with our assigned school database.
 - If you were to attempt to host locally, you would ideally use WAMP for windows and XAMP for MacOS
-    - Due not that some configuration files would need to be changed to use the localhost environment instead of the hosted environment on the school webserver
+    - Due note that some configuration files would need to be changed to use the localhost environment instead of the hosted environment on the school webserver
 - Use phpmyadmin to help setup local MySQL database
