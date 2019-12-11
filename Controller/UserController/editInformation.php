@@ -13,7 +13,10 @@
             return;
         }
         
-        $result = $db->query("Update users set name = '".$name."' where username = '".$_SESSION["username"]."'");
+        $stmt = $db->prepare("Update users set name = ? where username = ?");
+        $stmt->bind_param("ss", $name, $_SESSION["username"]);
+        $stmt->execute();
+        $result = $stmt->get_result();
       
         if($result){
             $arrayInfo[0] =true;

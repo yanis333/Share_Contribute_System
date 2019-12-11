@@ -41,8 +41,10 @@
                     $arrayInfo[1]['groupParticipant'] = $allInfo;
                 }
                 
-                $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content from postgroup as p  inner join posttexttogroup as pt on pt.postID = p.ID
-                                inner join users as u on u.id = p.userID where pt.groupID = ".$idSelected." order by p.date desc");
+                $result = $db->query("select p.ID,u.name,p.type,p.date,pt.content,pet.pathOfFile from postgroup as p  left join posttexttogroup as pt on pt.postID = p.ID
+                                left join postelementtogroup as pet on pet.postID = p.ID
+                                inner join users as u on u.id = p.userID where pet.groupID = ".$idSelected." or pt.groupID = ".$idSelected." order by p.date desc");
+                                
                 $allInfo = array();
                 
                 if($result){

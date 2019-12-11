@@ -8,22 +8,14 @@
 
         $result = $db->query("Select * from groupparticipants");
         $allInfo = array();
-            if($result){
-                while($row = $result->fetch_assoc()){
-                    $db->query("
-                    INSERT 
-                    INTO accgroup(userID,access,groupID)
-                    VALUES(".$row['userID'].",1,".$row['groupID'].")");
-                }
-               
+        if($result){
+            while($row = $result->fetch_assoc()){
+                $stmt = $db->prepare("INSERT INTO accgroup(userID,access,groupID) VALUES(?,1,?)");
+                $stmt->bind_param("ii", $row['userID'], $row['groupID']);
+                $stmt->execute();
             }
-        /*
-        $eventID = $_POST['id'];
-
-        $result = $db->query("update events set isDeleted=1 where id=".$eventID);
-        $arrayInfo[0] = true;
-
-     */
+            
+        }
     }
     echo json_encode($arrayInfo);
 ?>

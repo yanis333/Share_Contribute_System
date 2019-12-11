@@ -8,7 +8,11 @@ if(isset($_SESSION['username']))
     if($_SESSION["username"]!=null){
 
         $userId = $_POST['userId'];
-        $result = $db->query("Select * from users where id='".$userId."'");
+
+        $stmt = $db->prepare("Select * from users where id=?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         if($result != null){
             $row = $result->fetch_assoc();

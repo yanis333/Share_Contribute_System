@@ -441,6 +441,28 @@
                     $("#archiveEventButton").hide();
                     $("#divUpload").hide();
 
+                    $("#archiveEventButton").click(function(){
+
+                        if(confirm("Do you really want to Archive?")){
+                            $.post('../../Controller/EventController/archive.php',{eventId:$("#storeEventId").val()},function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    alert("Archive SUCCESSFULLY");
+                                    
+                                    createPostBox(info[1]['eventPostContent'],info[1]['access'],info[1]['archive'][0]['archive']); 
+                                    $("#deleteEventButton").hide();
+                                    $("#divUpload").hide();
+                                    $("#inviteParticipantH").hide();
+                                    $("#editParticipantH").hide();
+                                    $("#archiveEventButton").hide();
+                                    $("#postForUser").hide();
+                                    $("#addNewGroupToEvent").hide();
+                                }else{
+                                }
+                            });
+                        }
+                    });
+
                     $("#saveAccess").click(function(){
                         $.post('../../Controller/EventController/updateParticipantAccess.php',{userID:$("#storeUserID").val(),eventId:$("#storeEventId").val(),access:$("#accessSelected").val()},function(data){
                                 var info = JSON.parse(data);
@@ -519,7 +541,7 @@
 
                                     $("#mainSpecificEvent").show();
                                     $("#mainGenericEvent").hide();
-                                    if(info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post" ){
+                                    if((info[1]['access'][0]['access'] == "All" || info[1]['access'][0]['access'] == "View_and_Post") && info[1]['archive'][0]['archive'] == 1 ){
                                         $("#postForUser").show();
                                     }else{
                                         $("#postForUser").hide();
@@ -527,7 +549,7 @@
                                     $("#eventChoseName").text(info[1]['eventheader'][0]['name']);
                                     $("#storeEventId").val(idOfButtonClicked);
 
-                                    if(info[1]['canEdit'][0]['canEdit'] == 1){
+                                    if(info[1]['canEdit'][0]['canEdit'] == 1 && info[1]['archive'][0]['archive'] == 1){
                                         $("#inviteParticipantH").show();
                                         $("#editParticipantH").show();
                                         $("#deleteEventButton").show();
@@ -537,11 +559,15 @@
                                         $("#editParticipantH").hide();
                                         $("#deleteEventButton").hide();
                                         $("#archiveEventButton").hide();
+                                        
+                                    }
+                                    if(info[1]['archive'][0]['archive'] == 0){
+                                        $("#addNewGroupToEvent").hide();
                                     }
 
                                     createRightAllParticipantsBox(info[1]['eventParticipant'],info[1]['canEdit'][0]['canEdit']);
                                     createRightAllGroupsBox(info[1]['eventGroup']);
-                                    createPostBox(info[1]['eventPostContent'],info[1]['access']);
+                                    createPostBox(info[1]['eventPostContent'],info[1]['access'],info[1]['archive'][0]['archive']);
                                 }
                             });
                        }else if(this.id.includes("completePayment")){
@@ -570,7 +596,7 @@
                             $.post('../../Controller/EventController/saveComment.php',{id:idOfButtonClicked,comment:$("#commentPostId"+idOfButtonClicked).val(),eventId:$("#storeEventId").val()},function(data){
                                 var info = JSON.parse(data);
                                 if(info[0]){
-                                    createPostBox(info[1]['eventPostContent'],info[1]['access']);
+                                    createPostBox(info[1]['eventPostContent'],info[1]['access'],info[1]['archive'][0]['archive']);
                                 }else{
                                 }
                             });
@@ -737,7 +763,7 @@
                         }
                         return commentHtmlBox;
                     }
-                    function createPostBox(arrayofPost,access){
+                    function createPostBox(arrayofPost,access,archive = 1){
                         $("#postContentDiv").empty();
                         var images =0;
                         $("#nbPostEvent").text(arrayofPost.length);
@@ -752,7 +778,7 @@
                                                     images++;
                                                     postHtmlBox+="<img src=\""+arrayofPost[x]['pathOfFile']+"\" alt=\"Image\" width=\"100%\" height=\"500\"><br>";
                                                 }
-                                                if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
+                                                if((access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment')&& archive == 1){
                                                     postHtmlBox+="<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
                                                 "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>";
                                                 }

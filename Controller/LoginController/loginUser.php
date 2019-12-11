@@ -10,7 +10,9 @@
         return;
     }
     
-    $result = $db->query("Select * from users where username='".$username."' AND password= '".$password."'");
+    $stmt = $db->prepare("Select * from users where username=? AND password=?");
+    $stmt->bind_param("si", $username, $password);
+    $stmt->execute();
     $row = $result->fetch_assoc();
     $arr = array();
     // if query returns 1 value

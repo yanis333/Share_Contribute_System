@@ -5,8 +5,12 @@
     $arrayInfo = array();
     $arrayInfo[0] = false;
     if(isset($_SESSION['username'])){
-        $name = $_POST['name'];
-        $result = $db->query("select ID, name from users where name like '%".$name."%'");
+        $name = "%".$_POST['name']."%";
+
+        $stmt = $db->prepare("select ID, name from users where name like ?");
+        $stmt->bind_param("s", $name);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $allInfo = array();
         if($result){
             

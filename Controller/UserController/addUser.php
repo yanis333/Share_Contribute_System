@@ -4,8 +4,7 @@ session_start();
 $db = new DB();
 $arrayInfo = array();
 $allInfo= array();
-//echo $_SESSION['isAdmin'];
-//return;
+
 $arrayInfo[0] = false;
 if(isset($_SESSION['username']))
     if($_SESSION["username"] != null && $_SESSION['isAdmin'] == 1){
@@ -19,14 +18,18 @@ if(isset($_SESSION['username']))
             echo json_encode(false);
             return;
         }
+
+        $adminRights = 0;
         // Check if isAdmin checked
         if ($isAdmin == 1) {
-            $db->query("insert into users(name,password,birth,email,isAdmin,userName) values('".$name."','".$userPassword."','".$userDOB."','".$userEmail."',1,'".$userName."')");
-        } else {
-            $db->query("insert into users(name,password,birth,email,isAdmin,userName) values('".$name."','".$userPassword."','".$userDOB."','".$userEmail."',0,'".$userName."')");
+            $adminRights = 1;
         }
-            $arrayInfo[0] = true;
-            $arrayInfo[1] = $name;
+        $stmt = $db->prepare("insert into users(name,password,birth,email,isAdmin,userName) values(?,?,?,?,?,?)");
+        $stmt->bind_param("ssssis", $name, $userPassword, $userDOB, $userEmail, $adminRights, $userName);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $arrayInfo[0] = true;
+        $arrayInfo[1] = $name;
     }
 
 echo json_encode($arrayInfo);

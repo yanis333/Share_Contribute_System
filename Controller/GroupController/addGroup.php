@@ -35,7 +35,12 @@
 	//return;
 		
         $db->query("insert into `groups`(name,managerID,creationDate,eventID) values('".$name."',".$_SESSION['usernameId'].",'". date('Y-m-d H:i:s')."',".$id.")");
+        $result2 = $db->getLastInsertedId();
         $result = $db->query("select id from `groups` where name='".$name."' AND managerID=".$_SESSION['usernameId']);
+        
+        if($result2){
+                mkdir("../../Files/Groups/".$result2, 0700);
+        }
 
         if($result){
             
@@ -55,7 +60,8 @@
         
         $result = $db->query("select 
                                     e.ID,
-                                    g.name
+                                    g.name,
+                                    Case When true then 1 end as isRegistered
                                     from `groups` as g 
                                     inner join events as e on e.ID = g.eventID
                                     where g.isDeleted=0 and e.isDeleted=0 and e.ID =".$id." order by g.name Asc");

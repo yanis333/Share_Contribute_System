@@ -240,7 +240,12 @@
             </div>
                 <div id="postForUser" class="groupBody">
                     <input type="text" id="postText" placeholder="Write Post..." />
-                    <button id="groupPostText" >Post</button><button >Image</button><button >Video</button>
+                    <button id="groupPostText" >Post</button><button id="displayUploadFunctionalities" >Upload</button>
+                    <div id="divUpload">
+                        <br>
+                        <input id="uploadFile" type="file"  name="uploadFile" />
+                        <button id="upload">Upload</button>
+                    </div>
                     
                     
                 </div>
@@ -321,6 +326,32 @@
                     $('#searchGroupInput').val('');
                     $("#deleteGroupButton").hide();
                     $("#archiveGroupButton").hide();
+                    $("#divUpload").hide();
+
+                    $("#displayUploadFunctionalities").click(function(){
+                        $("#divUpload").show();
+                    });
+                    $("#upload").on("click", function() {
+                        var file_data = $("#uploadFile").prop("files")[0];   
+                        var form_data = new FormData();
+                        form_data.append("file", file_data);
+                        form_data.append("groupId", $("#storeGroupId").val());
+                        $.ajax({
+                            url: "../../Controller/GroupController/uploadFile.php",//To change
+                            dataType: 'script',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: form_data,              
+                            type: 'post',
+                            success: function(data){
+                                var info = JSON.parse(data);
+                                if(info[0]){
+                                    createPostBox(info[1],info[2]); 
+                                }
+                            }
+                        });
+                    });
 
                     $(document).on("click","button",function(){
                         if(this.id.includes("groupOpen")){
@@ -481,14 +512,22 @@
 
                     function createPostBox(arrayofPost, access){
                         $("#postContentDiv").empty();
-			if(arrayofPost != undefined){
+                        var images =0;
+                        if(arrayofPost != undefined){
+                            
                         $("#nbPostGroup").text(arrayofPost.length);
 			
                         for(var x = 0; x<arrayofPost.length;x++ ){
                             var postHtmlBox = "<div class = 'userGroupPost'>" +
                                                 "<h5>"+arrayofPost[x]['name']+"</h4> "+
-                                                "<span> "+arrayofPost[x]['date']+"</span><br><br>"+
-                                                "<h4>"+arrayofPost[x]['content']+"</h4><br>";
+                                                "<span> "+arrayofPost[x]['date']+"</span><br><br>";
+                                                if(arrayofPost[x]['type'] == 'Text'){
+                                                    postHtmlBox+="<h4>"+arrayofPost[x]['content']+"</h4><br>";
+                                                }
+                                                if(arrayofPost[x]['type'] == 'Image'){
+                                                    images++;
+                                                    postHtmlBox+="<img src=\""+arrayofPost[x]['pathOfFile']+"\" alt=\"Image\" width=\"100%\" height=\"500\"><br>";
+                                                }
                                                 if(access[0]['access'] == 'All' || access[0]['access'] == 'View_and_Comment'){
                                                     postHtmlBox+="<input id=\"commentPostId"+arrayofPost[x]['ID']+"\" type=text placeholder=\"Comment...\" />"+
                                                 "<button id=\"commentPostIdButton"+arrayofPost[x]['ID']+"\">Comment</button>";
@@ -496,7 +535,9 @@
                             postHtmlBox+= createCommentBox(arrayofPost[x]['children'])+
                                 "</div>"
                             $("#postContentDiv").append(postHtmlBox);
-                        }}
+                        }
+                        }
+                        $("#nbImageGroup").text(images);
                     }
 
                     function createCommentBox(arrayofComment){
