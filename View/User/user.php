@@ -27,7 +27,6 @@
                 width: 30%;
                 }
                 #searchUserButton {
-                width: 5%;
                 background-color: #1F11F7;
                 color: white;
                 padding: 14px 20px;
@@ -39,7 +38,7 @@
 
                 #searchUserButton:hover {
                 background-color: #1006A6;
-                }
+		}
                 #createUserButton {
                 width: 5%;
                 background-color: #4CAF50;
@@ -62,9 +61,22 @@
                 width: 90%;
                 
                 }
+
+		.userGroup:hover{
+			background-color: #4CAF50;
+		}
+
                 .userButton{
                     float:right;
+		    background-color: #c9c9c9;
+		    padding: 5px 10px;
+		    border: none;
+		    border-radius: 10px;
                 }
+
+		.userButton:hover{
+			background-color: #9c9c9c;
+		}
                 #UserSearched{
                     width : 45%;
                     margin-left:20%

@@ -20,7 +20,6 @@
                 }
 
                 #searchEventButton {
-                width: 5%;
                 background-color: #1F11F7;
                 color: white;
                 padding: 14px 20px;
@@ -35,7 +34,6 @@
                 }
 
                 #createEventButton {
-                width: 5%;
                 background-color: #4CAF50;
                 color: white;
                 padding: 14px 20px;
@@ -70,6 +68,10 @@
                 box-shadow: 5px 10px #888888;
                 }
 
+		.eventGroup:hover{
+			background-color: #4CAF50;
+		}
+
                 .userGroup {
                 margin-top :2%;
                 border-radius: 5px;
@@ -88,6 +90,17 @@
                 .eventButton, .userButton{
                     float:right;
                 }
+
+		.eventButton{
+			background-color: #c9c9c9;
+			padding: 5px 10px;
+			border: 2px;
+			border-radius: 10px; 
+		}
+		
+		.eventButton:hover{
+			background-color: #9c9c9c;
+		}
 
                 .eventHeader {
                 margin-top :2%;

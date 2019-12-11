@@ -45,6 +45,10 @@
                 padding: 20px;
                 width: 90%;
                 }
+
+		.userGroup:hover{
+			background-color: #4CAF50;
+		}
                 .userGroupAllConvo {
                 margin-top :2%;
                 border-radius: 5px;
@@ -52,6 +56,26 @@
                 padding: 10px;
                 width: 90%;
                 }
+
+		button{
+			background-color: #c9c9c9 !important;
+			padding: 5px 10px !important;
+			border: none !important;
+			border-radius: 10px !important;
+		}
+
+		button:hover{
+			background-color: #9c9c9c !important;
+		}
+
+		.modal-footer  button{
+			background-color: #FF5252 !important;
+		}
+
+		.modal-footer button:hover{
+			background-color: #FF2929 !important;
+		}
+
                 .userGroup2 :hover{
                     background-color:lightgrey;
                     cursor:pointer;

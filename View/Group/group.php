@@ -38,7 +38,6 @@
             }
             
             #clearButton {
-                width: 5%;
                 background-color: #FF5252;
                 color: white;
                 padding: 14px 20px;
@@ -71,7 +70,11 @@
                 padding: 20px;
                 width: 60%;
                 box-shadow: 5px 10px #888888;
-            }
+	    }
+
+		.listOfGroups:hover{
+			background-color: #4CAF50;
+		}
 
             .row2 {
                 display: flex;
@@ -81,7 +84,15 @@
 
             .groupButton{
                 float:right;
+		background-color: #c9c9c9;
+		padding: 5px 10px;
+		border: none;
+		border-radius: 10px;
             }
+
+		.groupButton:hover{
+			background-color: #9c9c9c;
+		}	
                
             .groupBody {
                 margin-top :2%;
